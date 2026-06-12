@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop, "feature/**", "release/**", "hotfix/**"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore server/PocketConsoleServer.slnx
+
+      - name: Build
+        run: dotnet build server/PocketConsoleServer.slnx --no-restore --configuration Release
+
+      - name: Publish
+        run: >
+          dotnet publish server/PocketConsoleServer.csproj
+          --no-restore
+          --configuration Release
+          --runtime win-x64
+          --self-contained false
+          --output publish/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PocketConsoleServer-${{ github.sha }}
+          path: publish/
+          retention-days: 14
