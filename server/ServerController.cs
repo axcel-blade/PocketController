@@ -42,8 +42,10 @@ public sealed class ServerController : IDisposable
         };
     }
 
+    // Throws VigemBusNotFoundException if the ViGEmBus driver is not installed.
     public void Start(int port)
     {
+        _gamepads.Initialize();
         _udp.Start(port);
         _heartbeat.Start();
         Log($"Server started on port {port}");

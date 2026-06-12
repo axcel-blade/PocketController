@@ -56,9 +56,22 @@ public partial class MainForm : Form
             var port = (int)numPort.Value;
             _settings.Port = port;
             SettingsManager.Save(_settings);
-            _server.Start(port);
-            btnToggle.Text = "Stop";
-            numPort.Enabled = false;
+            try
+            {
+                _server.Start(port);
+                btnToggle.Text = "Stop";
+                numPort.Enabled = false;
+            }
+            catch (Exception ex) when (ex.GetType().Name == "VigemBusNotFoundException")
+            {
+                MessageBox.Show(
+                    "ViGEmBus driver not found.\n\n" +
+                    "Please install it from:\nhttps://github.com/nefarius/ViGEmBus/releases\n\n" +
+                    "Restart the app after installing.",
+                    "Driver Required",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 

@@ -5,9 +5,12 @@ namespace PocketConsole.GamepadDriver;
 
 public sealed class VirtualGamepadManager : IDisposable
 {
-    private readonly ViGEmClient _client = new();
+    private ViGEmClient? _client;
     private readonly Dictionary<int, VirtualGamepad> _pads = new();
     private bool _disposed;
+
+    // Throws VigemBusNotFoundException if the ViGEmBus driver is not installed.
+    public void Initialize() => _client ??= new ViGEmClient();
 
     public IReadOnlyDictionary<int, VirtualGamepad> Controllers => _pads;
 
@@ -16,7 +19,7 @@ public sealed class VirtualGamepadManager : IDisposable
         if (_pads.ContainsKey(clientId) || _pads.Count >= Constants.MaxClients)
             return false;
 
-        _pads[clientId] = new VirtualGamepad(_client, clientId);
+        _pads[clientId] = new VirtualGamepad(_client!, clientId);
         return true;
     }
 
@@ -41,6 +44,6 @@ public sealed class VirtualGamepadManager : IDisposable
         _disposed = true;
         foreach (var pad in _pads.Values) pad.Dispose();
         _pads.Clear();
-        _client.Dispose();
+        _client?.Dispose();
     }
 }
