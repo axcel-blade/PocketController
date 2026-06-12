@@ -1,7 +1,13 @@
 namespace PocketConsole.Protocol;
 
+/// <summary>
+/// Converts <see cref="GamepadMessage"/> structs to and from raw byte arrays
+/// using little-endian binary encoding (BinaryWriter default).
+/// Field order must stay in sync with the Android client.
+/// </summary>
 public static class MessageSerializer
 {
+    /// <summary>Serializes a <see cref="GamepadMessage"/> into a 48-byte array.</summary>
     public static byte[] Serialize(GamepadMessage msg)
     {
         using var ms = new MemoryStream(Constants.BufferSize);
@@ -24,6 +30,10 @@ public static class MessageSerializer
         return ms.ToArray();
     }
 
+    /// <summary>
+    /// Deserializes a raw byte array into a <see cref="GamepadMessage"/>.
+    /// Throws <see cref="EndOfStreamException"/> if <paramref name="data"/> is too short.
+    /// </summary>
     public static GamepadMessage Deserialize(byte[] data)
     {
         using var ms = new MemoryStream(data);
@@ -31,19 +41,19 @@ public static class MessageSerializer
 
         return new GamepadMessage
         {
-            Type = (MessageType)r.ReadByte(),
-            Buttons = r.ReadUInt16(),
-            LeftStickX = r.ReadSingle(),
-            LeftStickY = r.ReadSingle(),
-            RightStickX = r.ReadSingle(),
-            RightStickY = r.ReadSingle(),
-            LeftTrigger = r.ReadSingle(),
+            Type         = (MessageType)r.ReadByte(),
+            Buttons      = r.ReadUInt16(),
+            LeftStickX   = r.ReadSingle(),
+            LeftStickY   = r.ReadSingle(),
+            RightStickX  = r.ReadSingle(),
+            RightStickY  = r.ReadSingle(),
+            LeftTrigger  = r.ReadSingle(),
             RightTrigger = r.ReadSingle(),
-            DPad = r.ReadByte(),
-            GyroX = r.ReadSingle(),
-            GyroY = r.ReadSingle(),
-            GyroZ = r.ReadSingle(),
-            TimestampMs = r.ReadInt64()
+            DPad         = r.ReadByte(),
+            GyroX        = r.ReadSingle(),
+            GyroY        = r.ReadSingle(),
+            GyroZ        = r.ReadSingle(),
+            TimestampMs  = r.ReadInt64()
         };
     }
 }

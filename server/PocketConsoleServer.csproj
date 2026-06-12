@@ -10,12 +10,15 @@
     <Compile Remove="Protocol\**" />
     <Compile Remove="GamepadDriver\**" />
     <Compile Remove="NetworkLayer\**" />
+    <Compile Remove="Tests\**" />
     <EmbeddedResource Remove="Protocol\**" />
     <EmbeddedResource Remove="GamepadDriver\**" />
     <EmbeddedResource Remove="NetworkLayer\**" />
+    <EmbeddedResource Remove="Tests\**" />
     <None Remove="Protocol\**" />
     <None Remove="GamepadDriver\**" />
     <None Remove="NetworkLayer\**" />
+    <None Remove="Tests\**" />
   </ItemGroup>
 
   <PropertyGroup>
