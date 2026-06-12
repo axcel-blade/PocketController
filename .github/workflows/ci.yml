@@ -25,6 +25,9 @@ jobs:
       - name: Build
         run: dotnet build server/PocketConsoleServer.slnx --no-restore --configuration Release
 
+      - name: Test
+        run: dotnet test server/Tests/PocketConsole.Tests.csproj --no-restore --configuration Release --logger "github;verbosity=normal"
+
       - name: Publish
         run: >
           dotnet publish server/PocketConsoleServer.csproj

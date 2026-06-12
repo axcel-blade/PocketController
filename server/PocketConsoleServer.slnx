@@ -3,4 +3,5 @@
   <Project Path="Protocol\Protocol.csproj" />
   <Project Path="GamepadDriver\GamepadDriver.csproj" />
   <Project Path="NetworkLayer\NetworkLayer.csproj" />
+  <Project Path="Tests\PocketConsole.Tests.csproj" />
 </Solution>
