@@ -272,7 +272,7 @@ namespace PocketConsoleServer
 
             lblFooter.AutoSize  = false;
             lblFooter.Dock      = DockStyle.Fill;
-            lblFooter.Text      = "PocketConsole Server  •  UDP  •  ViGEmBus";
+            lblFooter.Text      = "© 2026 Axcel Blade  •  github.com/axcel-blade  •  UDP  •  ViGEmBus";
             lblFooter.Font      = fontSm;
             lblFooter.ForeColor = textSec;
             lblFooter.TextAlign = ContentAlignment.MiddleCenter;

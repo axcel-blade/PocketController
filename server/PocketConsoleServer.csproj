@@ -24,6 +24,15 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>Axcel Blade</Company>
+    <Authors>Axcel Blade</Authors>
+    <Copyright>Copyright © 2026 Axcel Blade</Copyright>
+    <PackageProjectUrl>https://github.com/axcel-blade</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/axcel-blade/PocketConsole</RepositoryUrl>
+    <Description>Turn your Android phone into a wireless Xbox 360 controller for your PC.</Description>
   </PropertyGroup>
 
 </Project>
