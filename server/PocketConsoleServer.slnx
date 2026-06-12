@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="PocketConsoleServer.csproj" />
+  <Project Path="Protocol\Protocol.csproj" />
+  <Project Path="GamepadDriver\GamepadDriver.csproj" />
+  <Project Path="NetworkLayer\NetworkLayer.csproj" />
+</Solution>
