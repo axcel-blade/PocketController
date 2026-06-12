@@ -6,13 +6,13 @@ using PocketConsole.Protocol;
 
 namespace PocketConsoleServer;
 
-public partial class Form1 : Form
+public partial class MainForm : Form
 {
     private readonly ServerController _server = new();
     private readonly AppSettings _settings = SettingsManager.Load();
     private TrayManager? _tray;
 
-    public Form1()
+    public MainForm()
     {
         InitializeComponent();
         _server.OnLog += AppendLog;

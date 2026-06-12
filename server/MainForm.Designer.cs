@@ -1,6 +1,6 @@
 namespace PocketConsoleServer
 {
-    partial class Form1
+    partial class MainForm
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -71,7 +71,7 @@ namespace PocketConsoleServer
             rtbLog.BackColor = SystemColors.Window;
             rtbLog.ScrollBars = RichTextBoxScrollBars.Vertical;
 
-            // Form1
+            // MainForm
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(600, 440);
