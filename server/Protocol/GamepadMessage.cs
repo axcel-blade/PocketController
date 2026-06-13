@@ -1,4 +1,4 @@
-namespace PocketConsole.Protocol;
+namespace PocketController.Protocol;
 
 /// <summary>
 /// Single UDP packet carrying all controller state from the Android client.

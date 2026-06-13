@@ -34,7 +34,7 @@
     <Authors>Axcel Blade</Authors>
     <Copyright>Copyright © 2026 Axcel Blade</Copyright>
     <PackageProjectUrl>https://github.com/axcel-blade</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/axcel-blade/PocketConsole</RepositoryUrl>
+    <RepositoryUrl>https://github.com/axcel-blade/PocketController</RepositoryUrl>
     <Description>Turn your Android phone into a wireless Xbox 360 controller for your PC.</Description>
   </PropertyGroup>
 

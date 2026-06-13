@@ -1,4 +1,4 @@
-namespace PocketConsole.Protocol;
+namespace PocketController.Protocol;
 
 /// <summary>
 /// Converts <see cref="GamepadMessage"/> structs to and from raw byte arrays

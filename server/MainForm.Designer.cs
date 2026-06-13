@@ -1,4 +1,4 @@
-namespace PocketConsoleServer
+namespace PocketControllerServer
 {
     partial class MainForm
     {
@@ -79,7 +79,7 @@ namespace PocketConsoleServer
             pnlHeader.Padding   = new Padding(20, 0, 20, 0);
 
             lblAppName.AutoSize  = true;
-            lblAppName.Text      = "PocketConsole";
+            lblAppName.Text      = "PocketController";
             lblAppName.Font      = fontTitle;
             lblAppName.ForeColor = textPri;
             lblAppName.Location  = new Point(20, 14);
@@ -285,7 +285,7 @@ namespace PocketConsoleServer
             ClientSize          = new Size(700, 500);
             MinimumSize         = new Size(560, 420);
             BackColor           = bg;
-            Text                = "PocketConsole Server";
+            Text                = "PocketController Server";
             Controls.AddRange(new Control[] { pnlBody, pnlFooter, pnlHeader });
 
             ((System.ComponentModel.ISupportInitialize)numPort).EndInit();

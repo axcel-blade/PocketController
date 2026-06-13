@@ -1,6 +1,6 @@
-using PocketConsole.Protocol;
+using PocketController.Protocol;
 
-namespace PocketConsole.NetworkLayer;
+namespace PocketController.NetworkLayer;
 
 /// <summary>
 /// Periodically checks all active sessions and removes any that have not sent

@@ -1,7 +1,7 @@
-namespace PocketConsoleServer;
+namespace PocketControllerServer;
 
 /// <summary>
-/// Manages the Windows system tray icon for PocketConsole Server.
+/// Manages the Windows system tray icon for PocketController Server.
 /// Closing the main window hides it rather than exiting; the tray icon
 /// lets the user show the window again or exit the process entirely.
 /// </summary>
@@ -21,7 +21,7 @@ public sealed class TrayManager : IDisposable
 
         _trayIcon = new NotifyIcon
         {
-            Text             = "PocketConsole Server",
+            Text             = "PocketController Server",
             Icon             = SystemIcons.Application,
             ContextMenuStrip = menu,
             Visible          = true

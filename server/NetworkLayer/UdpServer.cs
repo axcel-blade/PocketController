@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Sockets;
-using PocketConsole.Protocol;
+using PocketController.Protocol;
 
-namespace PocketConsole.NetworkLayer;
+namespace PocketController.NetworkLayer;
 
 /// <summary>
 /// Listens on a UDP port and raises <see cref="OnMessageReceived"/> for each

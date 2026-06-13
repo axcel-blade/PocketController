@@ -1,4 +1,4 @@
-namespace PocketConsoleServer
+namespace PocketControllerServer
 {
     internal static class Program
     {

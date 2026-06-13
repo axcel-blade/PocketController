@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace PocketConsole.NetworkLayer;
+namespace PocketController.NetworkLayer;
 
 /// <summary>
 /// Represents a single connected Android client.

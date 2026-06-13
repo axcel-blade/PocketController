@@ -1,4 +1,4 @@
-# Contributing to PocketConsole
+# Contributing to PocketController
 
 Thank you for your interest in contributing!
 
@@ -27,7 +27,7 @@ Thank you for your interest in contributing!
 
 ```
 cd server
-dotnet build PocketConsoleServer.slnx
+dotnet build PocketControllerServer.slnx
 ```
 
 ## Pull Request Guidelines

@@ -1,15 +1,15 @@
 using System.Text.Json;
 
-namespace PocketConsoleServer;
+namespace PocketControllerServer;
 
 /// <summary>User-configurable server settings, persisted to <c>settings.json</c> next to the EXE.</summary>
 public class AppSettings
 {
-    /// <summary>UDP port the server listens on. Defaults to <see cref="PocketConsole.Protocol.Constants.DefaultPort"/>.</summary>
-    public int Port { get; set; } = PocketConsole.Protocol.Constants.DefaultPort;
+    /// <summary>UDP port the server listens on. Defaults to <see cref="PocketController.Protocol.Constants.DefaultPort"/>.</summary>
+    public int Port { get; set; } = PocketController.Protocol.Constants.DefaultPort;
 
-    /// <summary>Maximum number of simultaneous clients. Defaults to <see cref="PocketConsole.Protocol.Constants.MaxClients"/>.</summary>
-    public int MaxClients { get; set; } = PocketConsole.Protocol.Constants.MaxClients;
+    /// <summary>Maximum number of simultaneous clients. Defaults to <see cref="PocketController.Protocol.Constants.MaxClients"/>.</summary>
+    public int MaxClients { get; set; } = PocketController.Protocol.Constants.MaxClients;
 }
 
 /// <summary>

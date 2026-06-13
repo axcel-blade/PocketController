@@ -1,9 +1,9 @@
 using System.Net;
-using PocketConsole.GamepadDriver;
-using PocketConsole.NetworkLayer;
-using PocketConsole.Protocol;
+using PocketController.GamepadDriver;
+using PocketController.NetworkLayer;
+using PocketController.Protocol;
 
-namespace PocketConsoleServer;
+namespace PocketControllerServer;
 
 /// <summary>
 /// Central coordinator that wires the network layer to the gamepad driver.

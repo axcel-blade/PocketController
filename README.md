@@ -1,11 +1,11 @@
-# PocketConsole
+# PocketController
 
 Turn your Android phone into a wireless Xbox 360 controller for your PC.
 
 ## Architecture
 
 ```
-PocketConsoleServer (WinForms host)
+PocketControllerServer (WinForms host)
 ├── Protocol          — Packet format, serialization, constants
 ├── GamepadDriver     — Virtual Xbox 360 controller via ViGEmBus
 └── NetworkLayer      — UDP server, client sessions, heartbeat
@@ -20,7 +20,7 @@ PocketConsoleServer (WinForms host)
 ## Getting Started
 
 1. Install the ViGEmBus driver.
-2. Build and run `PocketConsoleServer`.
+2. Build and run `PocketControllerServer`.
 3. Click **Start** — the server listens on UDP port `5555` by default.
 4. Connect your Android app to the displayed IP address.
 

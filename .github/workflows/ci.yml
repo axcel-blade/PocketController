@@ -20,17 +20,17 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Restore
-        run: dotnet restore server/PocketConsoleServer.slnx
+        run: dotnet restore server/PocketControllerServer.slnx
 
       - name: Build
-        run: dotnet build server/PocketConsoleServer.slnx --no-restore --configuration Release
+        run: dotnet build server/PocketControllerServer.slnx --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test server/Tests/PocketConsole.Tests.csproj --no-restore --configuration Release --logger "github;verbosity=normal"
+        run: dotnet test server/Tests/PocketController.Tests.csproj --no-restore --configuration Release --logger "github;verbosity=normal"
 
       - name: Publish
         run: >
-          dotnet publish server/PocketConsoleServer.csproj
+          dotnet publish server/PocketControllerServer.csproj
           --no-restore
           --configuration Release
           --runtime win-x64
@@ -40,6 +40,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PocketConsoleServer-${{ github.sha }}
+          name: PocketControllerServer-${{ github.sha }}
           path: publish/
           retention-days: 14

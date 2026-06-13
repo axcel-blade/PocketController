@@ -1,7 +1,7 @@
 using System.Net;
-using PocketConsole.Protocol;
+using PocketController.Protocol;
 
-namespace PocketConsole.NetworkLayer;
+namespace PocketController.NetworkLayer;
 
 /// <summary>
 /// Tracks active client sessions and enforces the <see cref="Constants.MaxClients"/> limit.

@@ -12,7 +12,7 @@
 
 ## Checklist
 
-- [ ] Solution builds with no errors (`dotnet build PocketConsoleServer.slnx`)
+- [ ] Solution builds with no errors (`dotnet build PocketControllerServer.slnx`)
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
 - [ ] Version number bumped if this is a release PR
 - [ ] No build outputs or IDE files included

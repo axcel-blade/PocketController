@@ -1,7 +1,7 @@
 using System.Net;
-using PocketConsole.NetworkLayer;
+using PocketController.NetworkLayer;
 
-namespace PocketConsole.Tests.NetworkLayer;
+namespace PocketController.Tests.NetworkLayer;
 
 public class ClientSessionTests
 {

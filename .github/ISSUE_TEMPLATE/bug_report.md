@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a problem with PocketConsole
+about: Report a problem with PocketController
 labels: bug
 ---
 
@@ -27,7 +27,7 @@ labels: bug
 - OS: <!-- e.g. Windows 11 22H2 -->
 - .NET version: <!-- dotnet --version -->
 - ViGEmBus version:
-- PocketConsole version:
+- PocketController version:
 
 ## Event Log Output
 

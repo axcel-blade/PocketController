@@ -1,8 +1,8 @@
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
-using PocketConsole.Protocol;
+using PocketController.Protocol;
 
-namespace PocketConsole.GamepadDriver;
+namespace PocketController.GamepadDriver;
 
 /// <summary>
 /// Translates a <see cref="GamepadMessage"/> from the Android client into

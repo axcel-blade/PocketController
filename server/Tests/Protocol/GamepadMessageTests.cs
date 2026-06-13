@@ -1,6 +1,6 @@
-using PocketConsole.Protocol;
+using PocketController.Protocol;
 
-namespace PocketConsole.Tests.Protocol;
+namespace PocketController.Tests.Protocol;
 
 public class GamepadMessageTests
 {

@@ -1,4 +1,4 @@
-namespace PocketConsole.Protocol;
+namespace PocketController.Protocol;
 
 /// <summary>Shared constants used by both the server and the Android client.</summary>
 public static class Constants

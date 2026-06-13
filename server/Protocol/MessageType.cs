@@ -1,4 +1,4 @@
-namespace PocketConsole.Protocol;
+namespace PocketController.Protocol;
 
 /// <summary>
 /// Identifies the intent of a <see cref="GamepadMessage"/> packet.

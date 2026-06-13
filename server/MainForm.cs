@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using PocketConsole.NetworkLayer;
+using PocketController.NetworkLayer;
 
-namespace PocketConsoleServer;
+namespace PocketControllerServer;
 
 public partial class MainForm : Form
 {

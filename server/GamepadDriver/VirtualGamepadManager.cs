@@ -1,7 +1,7 @@
 using Nefarius.ViGEm.Client;
-using PocketConsole.Protocol;
+using PocketController.Protocol;
 
-namespace PocketConsole.GamepadDriver;
+namespace PocketController.GamepadDriver;
 
 /// <summary>
 /// Manages a pool of up to <see cref="Constants.MaxClients"/> virtual Xbox 360 controllers,

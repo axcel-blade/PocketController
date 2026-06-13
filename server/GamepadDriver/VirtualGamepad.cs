@@ -1,8 +1,8 @@
 using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
-using PocketConsole.Protocol;
+using PocketController.Protocol;
 
-namespace PocketConsole.GamepadDriver;
+namespace PocketController.GamepadDriver;
 
 /// <summary>
 /// Wraps a single ViGEm Xbox 360 virtual controller for one connected client.
