@@ -26,7 +26,15 @@ jobs:
         run: dotnet build server/PocketControllerServer.slnx --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test server/Tests/PocketController.Tests.csproj --configuration Release --logger "github;verbosity=normal"
+        run: dotnet test server/Tests/PocketController.Tests.csproj --no-restore --configuration Release --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: .NET Tests
+          path: "**/*.trx"
+          reporter: dotnet-trx
 
       - name: Publish
         run: >
