@@ -1,10 +1,16 @@
-name: CI
+name: CI - Server
 
 on:
   push:
     branches: [main, develop, "feature/**", "release/**", "hotfix/**"]
+    paths:
+      - "server/**"
+      - ".github/workflows/ci-server.yml"
   pull_request:
     branches: [main, develop]
+    paths:
+      - "server/**"
+      - ".github/workflows/ci-server.yml"
 
 jobs:
   build:
