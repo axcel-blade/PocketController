@@ -66,38 +66,52 @@ class _ControllerScreenState extends State<ControllerScreen> {
       onTapCancel: () { setState(() {}); onChanged(false); },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 60),
-        width: 70,
-        height: 28,
+        width: 64,
+        height: 26,
         decoration: BoxDecoration(
           color: pressed ? Colors.white30 : Colors.white12,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(13),
           border: Border.all(color: Colors.white30),
         ),
         child: Center(
-          child: Text(label, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 12)),
+          child: Text(label, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 11)),
         ),
       ),
     );
   }
 
   Widget _menuButton(String label, int bit) {
-    bool pressed = (widget.state.buttons & (1 << bit)) != 0;
+    final pressed = (widget.state.buttons & (1 << bit)) != 0;
     return GestureDetector(
       onTapDown: (_) { widget.state.setButton(bit, true); setState(() {}); },
       onTapUp: (_) { widget.state.setButton(bit, false); setState(() {}); },
       onTapCancel: () { widget.state.setButton(bit, false); setState(() {}); },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 60),
-        width: 44,
-        height: 22,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
+          shape: BoxShape.circle,
           color: pressed ? Colors.white30 : Colors.white12,
-          borderRadius: BorderRadius.circular(11),
           border: Border.all(color: Colors.white30),
         ),
         child: Center(
-          child: Text(label, style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.w600)),
+          child: Text(label, style: const TextStyle(color: Colors.white70, fontSize: 9, fontWeight: FontWeight.w600)),
         ),
+      ),
+    );
+  }
+
+  Widget _guideButton() {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: const BoxDecoration(
+        color: Color(0xFF107C10),
+        shape: BoxShape.circle,
+      ),
+      child: const Center(
+        child: Text('X', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -106,155 +120,147 @@ class _ControllerScreenState extends State<ControllerScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final h = size.height;
-    final w = size.width;
 
-    final stickSize = h * 0.38;
-    final dpadSize = h * 0.30;
-    final faceButtonSize = h * 0.095;
-    final triggerW = 38.0;
-    final triggerH = h * 0.52;
+    final stickSize = h * 0.31;
+    final dpadSize = h * 0.22;
+    final faceButtonSize = h * 0.086;
+    final triggerW = 34.0;
+    final triggerH = h * 0.20;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0E0E0E),
       body: SafeArea(
-        child: Stack(
-          children: [
-            // === LEFT SIDE ===
-            Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: w * 0.38,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // LB + LT row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final bodyW = constraints.maxWidth;
+            final bodyH = constraints.maxHeight;
+            const shoulderGap = 8.0;
+            const centerButtonGap = 18.0;
+            const menuButtonSize = 40.0;
+            const guideButtonSize = 56.0;
+
+            // Anchor controls by visual centers so the Xbox layout scales
+            // consistently across different landscape screen sizes.
+            final centerRowWidth = menuButtonSize * 2 + guideButtonSize + centerButtonGap * 2;
+            final leftStickX = bodyW * 0.20;
+            final leftStickY = bodyH * 0.40;
+            final dpadX = bodyW * 0.17;
+            final dpadY = bodyH * 0.72;
+            final faceButtonsX = bodyW * 0.81;
+            final faceButtonsY = bodyH * 0.37;
+            final rightStickX = bodyW * 0.73;
+            final rightStickY = bodyH * 0.72;
+
+            return Stack(
+              children: [
+                // --- Shoulders: LB LT | RT RB (Xbox diagram order) ---
+                Positioned(
+                  top: bodyH * 0.03,
+                  left: bodyW * 0.06,
+                  child: Row(
                     children: [
+                      _bumper('LB', _lbPressed, (p) {
+                        setState(() => _lbPressed = p);
+                        widget.state.setButton(_kLB, p);
+                      }),
+                      const SizedBox(width: shoulderGap),
                       TriggerSlider(
                         label: 'LT',
                         width: triggerW,
                         height: triggerH,
                         onChanged: (v) => widget.state.leftTrigger = v,
                       ),
-                      const SizedBox(width: 8),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          _bumper('LB', _lbPressed, (p) {
-                            setState(() => _lbPressed = p);
-                            widget.state.setButton(_kLB, p);
-                          }),
-                          SizedBox(height: triggerH - 40),
-                        ],
-                      ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  // Left stick
-                  AnalogStick(
-                    size: stickSize,
-                    onChanged: (x, y) { widget.state.leftStickX = x; widget.state.leftStickY = y; },
-                  ),
-                ],
-              ),
-            ),
-
-            // === CENTER ===
-            Positioned(
-              left: w * 0.35,
-              right: w * 0.35,
-              top: 0,
-              bottom: 0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Xbox guide button
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF107C10),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: Text('X', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Back / Start
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                Positioned(
+                  top: bodyH * 0.03,
+                  right: bodyW * 0.06,
+                  child: Row(
                     children: [
-                      _menuButton('Back', _kBack),
-                      const SizedBox(width: 12),
-                      _menuButton('Start', _kStart),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  // D-pad
-                  DpadWidget(
-                    size: dpadSize,
-                    onChanged: (bits) { widget.state.dpad = bits; setState(() {}); },
-                  ),
-                ],
-              ),
-            ),
-
-            // === RIGHT SIDE ===
-            Positioned(
-              right: 0,
-              top: 0,
-              bottom: 0,
-              width: w * 0.38,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // RB + RT row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          _bumper('RB', _rbPressed, (p) {
-                            setState(() => _rbPressed = p);
-                            widget.state.setButton(_kRB, p);
-                          }),
-                          SizedBox(height: triggerH - 40),
-                        ],
-                      ),
-                      const SizedBox(width: 8),
                       TriggerSlider(
                         label: 'RT',
                         width: triggerW,
                         height: triggerH,
                         onChanged: (v) => widget.state.rightTrigger = v,
                       ),
+                      const SizedBox(width: shoulderGap),
+                      _bumper('RB', _rbPressed, (p) {
+                        setState(() => _rbPressed = p);
+                        widget.state.setButton(_kRB, p);
+                      }),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  // Right stick
-                  AnalogStick(
-                    size: stickSize,
-                    onChanged: (x, y) { widget.state.rightStickX = x; widget.state.rightStickY = y; },
-                  ),
-                ],
-              ),
-            ),
+                ),
 
-            // === ABXY cluster — right of center ===
-            Positioned(
-              right: w * 0.36,
-              top: h * 0.1,
-              child: FaceButtonCluster(
-                buttonSize: faceButtonSize,
-                pressed: _pressedFace,
-                onChanged: _onFaceButton,
-              ),
-            ),
-          ],
+                // --- Center: Back | Guide | Start ---
+                Positioned(
+                  top: bodyH * 0.24,
+                  left: (bodyW - centerRowWidth) / 2,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _menuButton('Back', _kBack),
+                      const SizedBox(width: centerButtonGap),
+                      _guideButton(),
+                      const SizedBox(width: centerButtonGap),
+                      _menuButton('Start', _kStart),
+                    ],
+                  ),
+                ),
+
+                // --- Left stick (LSB) — upper-left ---
+                Positioned(
+                  left: leftStickX - stickSize / 2,
+                  top: leftStickY - stickSize / 2,
+                  child: AnalogStick(
+                    size: stickSize,
+                    onChanged: (x, y) {
+                      widget.state.leftStickX = x;
+                      widget.state.leftStickY = y;
+                    },
+                  ),
+                ),
+
+                // --- D-pad — below left stick, slightly toward center ---
+                Positioned(
+                  left: dpadX - dpadSize / 2,
+                  top: dpadY - dpadSize / 2,
+                  child: DpadWidget(
+                    size: dpadSize,
+                    onChanged: (bits) {
+                      widget.state.dpad = bits;
+                      setState(() {});
+                    },
+                  ),
+                ),
+
+                // --- ABXY — upper-right diamond ---
+                Positioned(
+                  left: faceButtonsX - (faceButtonSize * 2 + faceButtonSize * 0.12) / 2,
+                  top: faceButtonsY - (faceButtonSize * 2 + faceButtonSize * 0.12) / 2,
+                  child: FaceButtonCluster(
+                    buttonSize: faceButtonSize,
+                    pressed: _pressedFace,
+                    onChanged: _onFaceButton,
+                  ),
+                ),
+
+                // --- Right stick (RSB) — below ABXY, slightly toward center ---
+                Positioned(
+                  left: rightStickX - stickSize / 2,
+                  top: rightStickY - stickSize / 2,
+                  child: AnalogStick(
+                    size: stickSize,
+                    onChanged: (x, y) {
+                      widget.state.rightStickX = x;
+                      widget.state.rightStickY = y;
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

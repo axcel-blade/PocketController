@@ -6,7 +6,7 @@
 - UDP server with client session management and heartbeat
 - WinForms host with system tray, event log, and settings persistence
 
-## v1.1.0 — Android Client
+## v1.1.1 — Android Client
 - Android app that reads touch/gyro input and sends `GamepadMessage` packets
 - On-screen virtual gamepad layout
 - Connection screen (IP + port entry)

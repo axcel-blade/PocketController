@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1] - 2026-06-23
+
+### Changed
+- `frontend/lib/screens/controller_screen.dart`: repositioned the on-screen controls to better match the Xbox controller reference layout and removed the decorative oval background
+- `frontend/lib/widgets/face_buttons.dart`: tightened ABXY diamond spacing to better match the Xbox button cluster
+- Updated project version references across the Flutter app, README, roadmap, and server UI label
+
 ## [1.1.0] - 2026-06-14
 
 ### Added

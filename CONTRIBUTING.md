@@ -34,7 +34,8 @@ dotnet build PocketControllerServer.slnx
 
 - Keep PRs focused — one feature or fix per PR.
 - Update `CHANGELOG.md` under `[Unreleased]` with a summary of your change.
-- Update the version number in `README.md`, `CHANGELOG.md`, and the form title in `MainForm.Designer.cs` when bumping a release.
+- Update the version number in `README.md`, `CHANGELOG.md`, `frontend/pubspec.yaml`, `ROADMAP.md`, and `server/MainForm.Designer.cs` when bumping a release.
+- Branch from `develop` when possible and use Git Flow names such as `feature/*`, `release/*`, and `hotfix/*`.
 - Do not include build outputs (`bin/`, `obj/`) or IDE files (`.vs/`) in your commit.
 
 ## Code Style

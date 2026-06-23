@@ -65,8 +65,9 @@ class FaceButtonCluster extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gap = buttonSize * 0.2;
-    final total = buttonSize * 3 + gap * 2;
+    // Diamond spacing matching Xbox ABXY layout (Y top, X left, B right, A bottom).
+    final gap = buttonSize * 0.12;
+    final total = buttonSize * 2 + gap;
 
     return SizedBox(
       width: total,

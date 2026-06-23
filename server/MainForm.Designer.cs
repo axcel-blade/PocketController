@@ -85,7 +85,7 @@ namespace PocketControllerServer
             lblAppName.Location  = new Point(20, 14);
 
             lblVersion.AutoSize  = true;
-            lblVersion.Text      = "SERVER  v1.0.0";
+            lblVersion.Text      = "SERVER  v1.1.1";
             lblVersion.Font      = new Font("Segoe UI", 7.5f, FontStyle.Bold);
             lblVersion.ForeColor = accent;
             lblVersion.Location  = new Point(23, 42);

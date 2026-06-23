@@ -42,4 +42,4 @@ PocketControllerServer (WinForms host)        frontend/ (Flutter Android app)
 
 ## Version
 
-**v1.1.0**
+**v1.1.1**
