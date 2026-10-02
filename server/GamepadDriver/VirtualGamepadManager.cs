@@ -12,10 +12,14 @@ public sealed class VirtualGamepadManager : IDisposable
 {
     private ViGEmClient? _client;
     private readonly Dictionary<int, VirtualGamepad> _pads = new();
+    private readonly object _lock = new();
     private bool _disposed;
 
-    /// <summary>All currently active virtual controllers, keyed by client ID.</summary>
-    public IReadOnlyDictionary<int, VirtualGamepad> Controllers => _pads;
+    /// <summary>A snapshot of the active virtual controllers, keyed by client ID.</summary>
+    public IReadOnlyDictionary<int, VirtualGamepad> Controllers
+    {
+        get { lock (_lock) return new Dictionary<int, VirtualGamepad>(_pads); }
+    }
 
     /// <summary>
     /// Connects to the ViGEmBus driver. Must be called before <see cref="AddController"/>.
@@ -31,28 +35,34 @@ public sealed class VirtualGamepadManager : IDisposable
     /// </summary>
     public bool AddController(int clientId)
     {
-        if (_pads.ContainsKey(clientId) || _pads.Count >= Constants.MaxClients)
-            return false;
+        lock (_lock)
+        {
+            if (_client == null || _pads.ContainsKey(clientId) || _pads.Count >= Constants.MaxClients)
+                return false;
 
-        _pads[clientId] = new VirtualGamepad(_client!, clientId);
-        return true;
+            _pads[clientId] = new VirtualGamepad(_client, clientId);
+            return true;
+        }
     }
 
     /// <summary>Disconnects and removes the virtual controller for the given <paramref name="clientId"/>.</summary>
     public void RemoveController(int clientId)
     {
-        if (_pads.TryGetValue(clientId, out var pad))
+        lock (_lock)
         {
-            pad.Dispose();
-            _pads.Remove(clientId);
+            if (_pads.Remove(clientId, out var pad))
+                pad.Dispose();
         }
     }
 
     /// <summary>Forwards an input packet to the virtual controller owned by <paramref name="clientId"/>.</summary>
     public void UpdateController(int clientId, GamepadMessage msg)
     {
-        if (_pads.TryGetValue(clientId, out var pad))
-            pad.Update(msg);
+        lock (_lock)
+        {
+            if (_pads.TryGetValue(clientId, out var pad))
+                pad.Update(msg);
+        }
     }
 
     /// <inheritdoc/>
@@ -60,8 +70,11 @@ public sealed class VirtualGamepadManager : IDisposable
     {
         if (_disposed) return;
         _disposed = true;
-        foreach (var pad in _pads.Values) pad.Dispose();
-        _pads.Clear();
+        lock (_lock)
+        {
+            foreach (var pad in _pads.Values) pad.Dispose();
+            _pads.Clear();
+        }
         _client?.Dispose();
     }
 }

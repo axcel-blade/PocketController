@@ -114,4 +114,56 @@ public class ClientManagerTests
         Assert.NotNull(newSession);
         Assert.Equal(4, mgr.Sessions.Count);
     }
+
+    [Fact]
+    public void Remove_Twice_FiresDisconnectedOnce()
+    {
+        var mgr     = new ClientManager();
+        var session = mgr.GetOrAdd(EP(9001))!;
+        int fired   = 0;
+        mgr.OnClientDisconnected += _ => fired++;
+
+        mgr.Remove(session);
+        mgr.Remove(session); // e.g. Disconnect packet and heartbeat timeout racing
+
+        Assert.Equal(1, fired);
+    }
+
+    [Fact]
+    public void Sessions_IsSnapshot_SafeToEnumerateWhileRemoving()
+    {
+        var mgr = new ClientManager();
+        mgr.GetOrAdd(EP(9001));
+        mgr.GetOrAdd(EP(9002));
+
+        foreach (var s in mgr.Sessions)
+            mgr.Remove(s);
+
+        Assert.Empty(mgr.Sessions);
+    }
+
+    [Fact]
+    public async Task ConcurrentAccess_DoesNotThrowOrCorruptState()
+    {
+        var mgr = new ClientManager();
+        var workers = Enumerable.Range(0, 8).Select(w => Task.Run(() =>
+        {
+            for (int i = 0; i < 2000; i++)
+            {
+                var ep = EP(10000 + (i + w) % 6);
+                var s  = mgr.GetOrAdd(ep);
+                _ = mgr.Sessions.Count;
+                if (s != null && i % 3 == 0) mgr.Remove(s);
+            }
+        })).ToArray();
+
+        await Task.WhenAll(workers);
+
+        Assert.True(mgr.Sessions.Count <= PocketController.Protocol.Constants.MaxClients);
+        foreach (var s in mgr.Sessions)
+        {
+            Assert.Same(s, mgr.GetById(s.Id));
+            Assert.Same(s, mgr.GetByEndpoint(s.EndPoint));
+        }
+    }
 }

@@ -7,6 +7,9 @@ namespace PocketController.Protocol;
 /// </summary>
 public static class MessageSerializer
 {
+    /// <summary>Size in bytes of every serialized <see cref="GamepadMessage"/>.</summary>
+    public const int PacketSize = 48;
+
     /// <summary>Serializes a <see cref="GamepadMessage"/> into a 48-byte array.</summary>
     public static byte[] Serialize(GamepadMessage msg)
     {

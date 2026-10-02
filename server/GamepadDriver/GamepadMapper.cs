@@ -13,7 +13,7 @@ public static class GamepadMapper
     // Bit positions within GamepadMessage.Buttons — must match the Android client.
     private const int BtnA = 0, BtnB = 1, BtnX = 2, BtnY = 3;
     private const int BtnLB = 4, BtnRB = 5, BtnStart = 6, BtnBack = 7;
-    private const int BtnLStick = 8, BtnRStick = 9;
+    private const int BtnLStick = 8, BtnRStick = 9, BtnGuide = 10;
 
     /// <summary>
     /// Applies all fields of <paramref name="msg"/> to the given <paramref name="ctrl"/>.
@@ -32,6 +32,7 @@ public static class GamepadMapper
         ctrl.SetButtonState(Xbox360Button.RightShoulder, msg.IsButtonPressed(BtnRB));
         ctrl.SetButtonState(Xbox360Button.Start,         msg.IsButtonPressed(BtnStart));
         ctrl.SetButtonState(Xbox360Button.Back,          msg.IsButtonPressed(BtnBack));
+        ctrl.SetButtonState(Xbox360Button.Guide,         msg.IsButtonPressed(BtnGuide));
 
         // Stick clicks
         ctrl.SetButtonState(Xbox360Button.LeftThumb,  msg.IsButtonPressed(BtnLStick));

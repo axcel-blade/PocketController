@@ -6,6 +6,15 @@ public static class Constants
     /// <summary>Default UDP port the server listens on.</summary>
     public const int DefaultPort = 5555;
 
+    /// <summary>UDP port the server listens on for discovery probes from phones.</summary>
+    public const int DiscoveryPort = 5556;
+
+    /// <summary>UDP port phones listen on for the server's periodic broadcast announcements.</summary>
+    public const int AnnouncePort = 5557;
+
+    /// <summary>How often the server broadcasts an announcement while running (milliseconds).</summary>
+    public const int AnnounceIntervalMs = 2000;
+
     /// <summary>Maximum number of simultaneous clients (one virtual controller each).</summary>
     public const int MaxClients = 4;
 
