@@ -92,4 +92,17 @@ public class MessageSerializerTests
         Assert.Equal(-1f, decoded.LeftStickY,  precision: 5);
         Assert.Equal(long.MaxValue, decoded.TimestampMs);
     }
+
+    [Theory]
+    [InlineData(MessageType.ConnectAck, 4)]
+    [InlineData(MessageType.Pong, 5)]
+    [InlineData(MessageType.ServerFull, 6)]
+    [InlineData(MessageType.NotConnected, 7)]
+    public void ReplyTypes_HaveStableWireValues(MessageType type, byte expected)
+    {
+        var bytes = MessageSerializer.Serialize(new GamepadMessage { Type = type, TimestampMs = 42 });
+        Assert.Equal(expected, bytes[0]);
+        Assert.Equal(48, bytes.Length);
+        Assert.Equal(42L, BitConverter.ToInt64(bytes, 40));
+    }
 }

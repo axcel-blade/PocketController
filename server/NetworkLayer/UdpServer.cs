@@ -32,6 +32,7 @@ public class UdpServer : IDisposable
         if (IsRunning) return;
         Port      = port;
         _udp      = new UdpClient(port);
+        DisableUdpConnReset(_udp);
         _cts      = new CancellationTokenSource();
         IsRunning = true;
         Task.Run(() => ReceiveLoop(_cts.Token));
@@ -44,6 +45,24 @@ public class UdpServer : IDisposable
         IsRunning = false;
         _cts?.Cancel();
         _udp?.Close();   // unblocks the pending ReceiveAsync
+        _cts?.Dispose();
+        _cts = null;
+    }
+
+    /// <summary>Sends a reply datagram to <paramref name="ep"/>. Failures are reported via <see cref="OnError"/>.</summary>
+    public void Send(IPEndPoint ep, GamepadMessage msg)
+    {
+        var udp = _udp;
+        if (!IsRunning || udp == null) return;
+        try
+        {
+            var bytes = MessageSerializer.Serialize(msg);
+            udp.Send(bytes, bytes.Length, ep);
+        }
+        catch (Exception ex)
+        {
+            OnError?.Invoke(ex);
+        }
     }
 
     private async Task ReceiveLoop(CancellationToken ct)
@@ -53,6 +72,10 @@ public class UdpServer : IDisposable
             try
             {
                 var result = await _udp!.ReceiveAsync(ct);
+
+                // Ignore stray or truncated datagrams instead of logging an exception for each one.
+                if (result.Buffer.Length < MessageSerializer.PacketSize) continue;
+
                 var msg    = MessageSerializer.Deserialize(result.Buffer);
                 OnMessageReceived?.Invoke(result.RemoteEndPoint, msg);
             }
@@ -66,6 +89,25 @@ public class UdpServer : IDisposable
         }
     }
 
+    /// <summary>
+    /// On Windows, replying to a phone that has gone away makes the next receive throw
+    /// WSAECONNRESET (from an ICMP "port unreachable"). Turn that off so one closed
+    /// client cannot flood the log with errors.
+    /// </summary>
+    private static void DisableUdpConnReset(UdpClient udp)
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        const int SioUdpConnReset = -1744830452; // SIO_UDP_CONNRESET
+        try
+        {
+            udp.Client.IOControl(SioUdpConnReset, [0, 0, 0, 0], null);
+        }
+        catch (SocketException)
+        {
+            // Not supported on this network stack; the receive loop still tolerates the error.
+        }
+    }
+
     /// <inheritdoc/>
     public void Dispose()
     {
@@ -73,6 +115,6 @@ public class UdpServer : IDisposable
         _disposed = true;
         Stop();
         _udp?.Dispose();
-        _cts?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

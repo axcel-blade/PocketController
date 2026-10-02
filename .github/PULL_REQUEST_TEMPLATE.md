@@ -12,7 +12,9 @@
 
 ## Checklist
 
-- [ ] Solution builds with no errors (`dotnet build PocketControllerServer.slnx`)
+- [ ] Server builds and tests pass (`dotnet build PocketControllerServer.slnx`, `dotnet test Tests`)
+- [ ] Mobile app analyzes and tests cleanly (`flutter analyze`, `flutter test`)
+- [ ] `docs/PROTOCOL.md` updated if the wire format changed
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
 - [ ] Version number bumped if this is a release PR
 - [ ] No build outputs or IDE files included

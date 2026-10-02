@@ -16,5 +16,17 @@ public enum MessageType : byte
     Input = 2,
 
     /// <summary>Keep-alive packet. Resets the server-side idle timer without sending input data.</summary>
-    Ping = 3
+    Ping = 3,
+
+    /// <summary>Server → client. Reply to <see cref="Connect"/>: a session (virtual controller) was created.</summary>
+    ConnectAck = 4,
+
+    /// <summary>Server → client. Reply to <see cref="Ping"/>. Echoes the client's timestamp for latency measurement.</summary>
+    Pong = 5,
+
+    /// <summary>Server → client. Reply to <see cref="Connect"/> when all controller slots are in use.</summary>
+    ServerFull = 6,
+
+    /// <summary>Server → client. Reply to <see cref="Ping"/> from an endpoint with no session (e.g. after a server restart or timeout).</summary>
+    NotConnected = 7
 }

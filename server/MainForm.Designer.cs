@@ -2,361 +2,516 @@ namespace PocketControllerServer
 {
     partial class MainForm
     {
+        /// <summary>Required designer variable.</summary>
         private System.ComponentModel.IContainer components = null;
 
+        /// <summary>Clean up any resources being used.</summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
+            {
                 components.Dispose();
+            }
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// Colours mirror Theme.cs; positions inside the cards are refined in MainForm.LayoutCards.
+        /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-
-            // --- Controls ---
-            pnlHeader      = new Panel();
-            lblAppName     = new Label();
-            lblVersion     = new Label();
-            pnlStatus      = new Panel();
-            lblStatusDot   = new Label();
-            lblStatusText  = new Label();
-
-            pnlBody        = new Panel();
-
-            pnlConnection  = new Panel();
-            lblIpIcon      = new Label();
-            lblIp          = new Label();
-            lblPortLabel   = new Label();
-            numPort        = new NumericUpDown();
-            btnToggle      = new Button();
-
-            pnlClients     = new Panel();
+            pnlHeader = new Panel();
+            picLogo = new PictureBox();
+            lblAppName = new Label();
+            lblVersion = new Label();
+            pnlStatus = new RoundedPanel();
+            lblStatusDot = new StatusDot();
+            lblStatusText = new Label();
+            pnlConnection = new RoundedPanel();
+            lblIpCaption = new Label();
+            lblIp = new Label();
+            btnCopyIp = new PcButton();
+            lblPortCaption = new Label();
+            pnlPortBox = new RoundedPanel();
+            numPort = new NumericUpDown();
+            btnToggle = new PcButton();
+            lblHint = new Label();
+            pnlSpacer = new Panel();
+            pnlClients = new RoundedPanel();
             lblClientsHeader = new Label();
             lblClientCount = new Label();
-            lstClients     = new ListBox();
-
-            pnlLog         = new Panel();
-            lblLogHeader   = new Label();
-            btnClearLog    = new Button();
-            rtbLog         = new RichTextBox();
-
-            pnlFooter      = new Panel();
-            lblFooter      = new Label();
-
-            ((System.ComponentModel.ISupportInitialize)numPort).BeginInit();
+            lblNoClients = new Label();
+            lstClients = new ListBox();
+            pnlLog = new RoundedPanel();
+            lblLogHeader = new Label();
+            btnClearLog = new PcButton();
+            rtbLog = new RichTextBox();
+            tblCards = new TableLayoutPanel();
+            pnlFooter = new Panel();
+            lblFooter = new Label();
+            pnlBody = new Panel();
             pnlHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
             pnlStatus.SuspendLayout();
-            pnlBody.SuspendLayout();
             pnlConnection.SuspendLayout();
+            pnlPortBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numPort).BeginInit();
             pnlClients.SuspendLayout();
             pnlLog.SuspendLayout();
+            tblCards.SuspendLayout();
             pnlFooter.SuspendLayout();
+            pnlBody.SuspendLayout();
             SuspendLayout();
-
-            // ── Palette ────────────────────────────────────────────────
-            var bg        = Color.FromArgb(15,  15,  23);
-            var surface   = Color.FromArgb(24,  24,  37);
-            var card      = Color.FromArgb(30,  30,  46);
-            var border    = Color.FromArgb(45,  45,  65);
-            var accent    = Color.FromArgb(99,  102, 241);  // indigo-500
-            var accentHov = Color.FromArgb(79,  82,  221);
-            var textPri   = Color.FromArgb(226, 232, 240);
-            var textSec   = Color.FromArgb(148, 163, 184);
-            var green     = Color.FromArgb(34,  197, 94);
-            var red       = Color.FromArgb(239, 68,  68);
-            var fontMain  = new Font("Segoe UI", 9.5f, FontStyle.Regular);
-            var fontBold  = new Font("Segoe UI", 9.5f, FontStyle.Bold);
-            var fontSm    = new Font("Segoe UI", 8.5f, FontStyle.Regular);
-            var fontH     = new Font("Segoe UI", 11f,  FontStyle.Bold);
-            var fontTitle = new Font("Segoe UI", 14f,  FontStyle.Bold);
-
-            // ── Header ─────────────────────────────────────────────────
-            pnlHeader.Dock      = DockStyle.Top;
-            pnlHeader.Height    = 64;
-            pnlHeader.BackColor = surface;
-            pnlHeader.Padding   = new Padding(20, 0, 20, 0);
-
-            lblAppName.AutoSize  = true;
-            lblAppName.Text      = "PocketController";
-            lblAppName.Font      = fontTitle;
-            lblAppName.ForeColor = textPri;
-            lblAppName.Location  = new Point(20, 14);
-
-            lblVersion.AutoSize  = true;
-            lblVersion.Text      = "SERVER  v1.0.0";
-            lblVersion.Font      = new Font("Segoe UI", 7.5f, FontStyle.Bold);
-            lblVersion.ForeColor = accent;
-            lblVersion.Location  = new Point(23, 42);
-
-            // status group (top-right)
-            pnlStatus.BackColor = surface;
-            pnlStatus.Size      = new Size(140, 40);
-            pnlStatus.Anchor    = AnchorStyles.Top | AnchorStyles.Right;
-            pnlStatus.Location  = new Point(700 - 160, 12);
-
-            lblStatusDot.AutoSize  = false;
-            lblStatusDot.Size      = new Size(12, 12);
-            lblStatusDot.Location  = new Point(0, 14);
-            lblStatusDot.BackColor = red;
-            // circle via Paint
-            lblStatusDot.Paint += (s, e) =>
-            {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                e.Graphics.Clear(surface);
-                using var b = new SolidBrush(lblStatusDot.BackColor);
-                e.Graphics.FillEllipse(b, 0, 0, 11, 11);
-            };
-
-            lblStatusText.AutoSize  = true;
-            lblStatusText.Text      = "Stopped";
-            lblStatusText.Font      = fontBold;
-            lblStatusText.ForeColor = textSec;
-            lblStatusText.Location  = new Point(18, 10);
-
-            pnlStatus.Controls.AddRange(new Control[] { lblStatusDot, lblStatusText });
-            pnlHeader.Controls.AddRange(new Control[] { lblAppName, lblVersion, pnlStatus });
-
-            // ── Body ───────────────────────────────────────────────────
-            pnlBody.Dock      = DockStyle.Fill;
-            pnlBody.BackColor = bg;
-            pnlBody.Padding   = new Padding(16, 12, 16, 8);
-
-            // ── Connection card ────────────────────────────────────────
-            pnlConnection.BackColor  = card;
-            pnlConnection.Dock       = DockStyle.Top;
-            pnlConnection.Height     = 60;
-            pnlConnection.Padding    = new Padding(16, 0, 16, 0);
-            pnlConnection.Margin     = new Padding(0, 0, 0, 12);
-            pnlConnection.Paint     += (s, e) => DrawCardBorder(e, card, border);
-
-            lblIpIcon.AutoSize  = false;
-            lblIpIcon.Size      = new Size(20, 20);
-            lblIpIcon.Location  = new Point(16, 20);
-            lblIpIcon.ForeColor = accent;
-            lblIpIcon.Font      = new Font("Segoe UI", 12f);
-            lblIpIcon.Text      = "⊕";
-
-            lblIp.AutoSize  = true;
-            lblIp.Location  = new Point(40, 20);
-            lblIp.Text      = "IP: ...";
-            lblIp.Font      = fontBold;
-            lblIp.ForeColor = textPri;
-
-            lblPortLabel.AutoSize  = true;
-            lblPortLabel.Location  = new Point(240, 22);
-            lblPortLabel.Text      = "Port";
-            lblPortLabel.Font      = fontSm;
-            lblPortLabel.ForeColor = textSec;
-
-            numPort.Location        = new Point(278, 17);
-            numPort.Size            = new Size(80, 28);
-            numPort.Minimum         = 1024;
-            numPort.Maximum         = 65535;
-            numPort.Value           = 5555;
-            numPort.Font            = fontMain;
-            numPort.ForeColor       = textPri;
-            numPort.BackColor       = surface;
-            numPort.BorderStyle     = BorderStyle.FixedSingle;
-
-            btnToggle.Location      = new Point(375, 13);
-            btnToggle.Size          = new Size(110, 34);
-            btnToggle.Text          = "▶  Start";
-            btnToggle.Font          = fontBold;
-            btnToggle.ForeColor     = Color.White;
-            btnToggle.BackColor     = accent;
-            btnToggle.FlatStyle     = FlatStyle.Flat;
-            btnToggle.FlatAppearance.BorderSize  = 0;
-            btnToggle.FlatAppearance.MouseOverBackColor = accentHov;
-            btnToggle.Cursor        = Cursors.Hand;
-            btnToggle.Click        += btnToggle_Click;
-
-            pnlConnection.Controls.AddRange(new Control[]
-                { lblIpIcon, lblIp, lblPortLabel, numPort, btnToggle });
-
-            // ── Clients card ───────────────────────────────────────────
-            pnlClients.BackColor  = card;
-            pnlClients.Anchor     = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom;
-            pnlClients.Location   = new Point(0, 0);
-            pnlClients.Width      = 220;
-            pnlClients.Paint     += (s, e) => DrawCardBorder(e, card, border);
-
-            lblClientsHeader.AutoSize  = true;
-            lblClientsHeader.Location  = new Point(16, 12);
-            lblClientsHeader.Text      = "CLIENTS";
-            lblClientsHeader.Font      = new Font("Segoe UI", 8f, FontStyle.Bold);
-            lblClientsHeader.ForeColor = textSec;
-
-            lblClientCount.AutoSize  = true;
-            lblClientCount.Location  = new Point(16, 30);
-            lblClientCount.Text      = "0 / 4 connected";
-            lblClientCount.Font      = fontSm;
-            lblClientCount.ForeColor = textSec;
-
-            lstClients.Anchor         = AnchorStyles.Top | AnchorStyles.Left |
-                                        AnchorStyles.Bottom | AnchorStyles.Right;
-            lstClients.Location       = new Point(10, 56);
-            lstClients.Size           = new Size(200, 100);   // height adjusted in OnResize
-            lstClients.BackColor      = surface;
-            lstClients.ForeColor      = textPri;
-            lstClients.Font           = fontMain;
-            lstClients.BorderStyle    = BorderStyle.None;
-            lstClients.DrawMode       = DrawMode.OwnerDrawFixed;
-            lstClients.ItemHeight     = 32;
-            lstClients.DrawItem      += LstClients_DrawItem;
-
-            pnlClients.Controls.AddRange(new Control[]
-                { lblClientsHeader, lblClientCount, lstClients });
-
-            // ── Log card ───────────────────────────────────────────────
-            pnlLog.BackColor  = card;
-            pnlLog.Anchor     = AnchorStyles.Top | AnchorStyles.Left |
-                                 AnchorStyles.Bottom | AnchorStyles.Right;
-            pnlLog.Location   = new Point(232, 0);
-            pnlLog.Width      = 400;   // adjusted in OnResize
-            pnlLog.Paint     += (s, e) => DrawCardBorder(e, card, border);
-
-            lblLogHeader.AutoSize  = true;
-            lblLogHeader.Location  = new Point(16, 12);
-            lblLogHeader.Text      = "EVENT LOG";
-            lblLogHeader.Font      = new Font("Segoe UI", 8f, FontStyle.Bold);
-            lblLogHeader.ForeColor = textSec;
-
-            btnClearLog.AutoSize       = false;
-            btnClearLog.Size           = new Size(56, 22);
-            btnClearLog.Anchor         = AnchorStyles.Top | AnchorStyles.Right;
-            btnClearLog.Location       = new Point(330, 10);  // adjusted in OnResize
-            btnClearLog.Text           = "Clear";
-            btnClearLog.Font           = fontSm;
-            btnClearLog.ForeColor      = textSec;
-            btnClearLog.BackColor      = surface;
-            btnClearLog.FlatStyle      = FlatStyle.Flat;
-            btnClearLog.FlatAppearance.BorderColor = border;
-            btnClearLog.FlatAppearance.BorderSize  = 1;
-            btnClearLog.Cursor         = Cursors.Hand;
-            btnClearLog.Click         += (_, _) => rtbLog.Clear();
-
-            rtbLog.Anchor      = AnchorStyles.Top | AnchorStyles.Left |
-                                  AnchorStyles.Bottom | AnchorStyles.Right;
-            rtbLog.Location    = new Point(10, 44);
-            rtbLog.Size        = new Size(380, 200);   // adjusted in OnResize
-            rtbLog.BackColor   = surface;
-            rtbLog.ForeColor   = textPri;
-            rtbLog.Font        = new Font("Cascadia Code", 8.5f, FontStyle.Regular);
-            rtbLog.ReadOnly    = true;
+            //
+            // pnlHeader
+            //
+            pnlHeader.BackColor = Color.FromArgb(18, 20, 23);
+            pnlHeader.Controls.Add(picLogo);
+            pnlHeader.Controls.Add(lblAppName);
+            pnlHeader.Controls.Add(lblVersion);
+            pnlHeader.Controls.Add(pnlStatus);
+            pnlHeader.Dock = DockStyle.Top;
+            pnlHeader.Location = new Point(16, 4);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Size = new Size(748, 72);
+            pnlHeader.TabIndex = 0;
+            //
+            // picLogo
+            //
+            picLogo.Location = new Point(0, 18);
+            picLogo.Name = "picLogo";
+            picLogo.Size = new Size(36, 36);
+            picLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            picLogo.TabIndex = 0;
+            picLogo.TabStop = false;
+            //
+            // lblAppName
+            //
+            lblAppName.AutoSize = true;
+            lblAppName.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            lblAppName.ForeColor = Color.FromArgb(232, 235, 239);
+            lblAppName.Location = new Point(46, 8);
+            lblAppName.Name = "lblAppName";
+            lblAppName.Size = new Size(186, 28);
+            lblAppName.TabIndex = 1;
+            lblAppName.Text = "PocketController";
+            //
+            // lblVersion
+            //
+            lblVersion.AutoSize = true;
+            lblVersion.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            lblVersion.ForeColor = Color.FromArgb(196, 248, 42);
+            lblVersion.Location = new Point(49, 40);
+            lblVersion.Name = "lblVersion";
+            lblVersion.Size = new Size(90, 12);
+            lblVersion.TabIndex = 2;
+            lblVersion.Text = "SERVER  ·  v1.1.0";
+            //
+            // pnlStatus
+            //
+            pnlStatus.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pnlStatus.BorderColor = Color.FromArgb(54, 59, 68);
+            pnlStatus.Controls.Add(lblStatusDot);
+            pnlStatus.Controls.Add(lblStatusText);
+            pnlStatus.CornerRadius = 17;
+            pnlStatus.FillColor = Color.FromArgb(27, 30, 35);
+            pnlStatus.Location = new Point(616, 19);
+            pnlStatus.Name = "pnlStatus";
+            pnlStatus.Size = new Size(132, 34);
+            pnlStatus.TabIndex = 3;
+            //
+            // lblStatusDot
+            //
+            lblStatusDot.DotColor = Color.FromArgb(142, 150, 163);
+            lblStatusDot.Location = new Point(14, 12);
+            lblStatusDot.Name = "lblStatusDot";
+            lblStatusDot.Size = new Size(10, 10);
+            lblStatusDot.TabIndex = 0;
+            //
+            // lblStatusText
+            //
+            lblStatusText.AutoSize = true;
+            lblStatusText.BackColor = Color.FromArgb(27, 30, 35);
+            lblStatusText.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lblStatusText.ForeColor = Color.FromArgb(142, 150, 163);
+            lblStatusText.Location = new Point(32, 8);
+            lblStatusText.Name = "lblStatusText";
+            lblStatusText.Size = new Size(58, 17);
+            lblStatusText.TabIndex = 1;
+            lblStatusText.Text = "Stopped";
+            //
+            // pnlConnection
+            //
+            pnlConnection.Controls.Add(lblIpCaption);
+            pnlConnection.Controls.Add(lblIp);
+            pnlConnection.Controls.Add(btnCopyIp);
+            pnlConnection.Controls.Add(lblPortCaption);
+            pnlConnection.Controls.Add(pnlPortBox);
+            pnlConnection.Controls.Add(btnToggle);
+            pnlConnection.Controls.Add(lblHint);
+            pnlConnection.Dock = DockStyle.Top;
+            pnlConnection.Location = new Point(0, 0);
+            pnlConnection.Name = "pnlConnection";
+            pnlConnection.Size = new Size(748, 116);
+            pnlConnection.TabIndex = 0;
+            //
+            // lblIpCaption
+            //
+            lblIpCaption.AutoSize = true;
+            lblIpCaption.BackColor = Color.FromArgb(27, 30, 35);
+            lblIpCaption.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblIpCaption.ForeColor = Color.FromArgb(142, 150, 163);
+            lblIpCaption.Location = new Point(18, 14);
+            lblIpCaption.Name = "lblIpCaption";
+            lblIpCaption.Size = new Size(70, 13);
+            lblIpCaption.TabIndex = 0;
+            lblIpCaption.Text = "PC ADDRESS";
+            //
+            // lblIp
+            //
+            lblIp.AutoSize = true;
+            lblIp.BackColor = Color.FromArgb(27, 30, 35);
+            lblIp.Font = new Font("Cascadia Mono", 17F, FontStyle.Bold);
+            lblIp.ForeColor = Color.FromArgb(92, 214, 230);
+            lblIp.Location = new Point(15, 30);
+            lblIp.Name = "lblIp";
+            lblIp.Size = new Size(170, 30);
+            lblIp.TabIndex = 1;
+            lblIp.Text = "0.0.0.0";
+            //
+            // btnCopyIp
+            //
+            btnCopyIp.AccessibleName = "Copy PC address";
+            btnCopyIp.ButtonStyle = PcButtonStyle.Ghost;
+            btnCopyIp.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnCopyIp.Location = new Point(194, 32);
+            btnCopyIp.Name = "btnCopyIp";
+            btnCopyIp.Size = new Size(64, 28);
+            btnCopyIp.SurroundColor = Color.FromArgb(27, 30, 35);
+            btnCopyIp.TabIndex = 2;
+            btnCopyIp.Text = "Copy";
+            btnCopyIp.Click += btnCopyIp_Click;
+            //
+            // lblPortCaption
+            //
+            lblPortCaption.AutoSize = true;
+            lblPortCaption.BackColor = Color.FromArgb(27, 30, 35);
+            lblPortCaption.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblPortCaption.ForeColor = Color.FromArgb(142, 150, 163);
+            lblPortCaption.Location = new Point(478, 14);
+            lblPortCaption.Name = "lblPortCaption";
+            lblPortCaption.Size = new Size(57, 13);
+            lblPortCaption.TabIndex = 3;
+            lblPortCaption.Text = "UDP PORT";
+            //
+            // pnlPortBox
+            //
+            pnlPortBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            pnlPortBox.Controls.Add(numPort);
+            pnlPortBox.CornerRadius = 10;
+            pnlPortBox.FillColor = Color.FromArgb(37, 41, 48);
+            pnlPortBox.Location = new Point(478, 30);
+            pnlPortBox.Name = "pnlPortBox";
+            pnlPortBox.Size = new Size(96, 36);
+            pnlPortBox.TabIndex = 4;
+            //
+            // numPort
+            //
+            numPort.AccessibleName = "UDP port";
+            numPort.BackColor = Color.FromArgb(37, 41, 48);
+            numPort.BorderStyle = BorderStyle.None;
+            numPort.Font = new Font("Cascadia Mono", 11F);
+            numPort.ForeColor = Color.FromArgb(232, 235, 239);
+            numPort.Location = new Point(10, 8);
+            numPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            numPort.Minimum = new decimal(new int[] { 1024, 0, 0, 0 });
+            numPort.Name = "numPort";
+            numPort.Size = new Size(78, 20);
+            numPort.TabIndex = 0;
+            numPort.Value = new decimal(new int[] { 5555, 0, 0, 0 });
+            //
+            // btnToggle
+            //
+            btnToggle.AccessibleName = "Start server";
+            btnToggle.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnToggle.ButtonStyle = PcButtonStyle.Primary;
+            btnToggle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnToggle.Location = new Point(598, 27);
+            btnToggle.Name = "btnToggle";
+            btnToggle.Size = new Size(132, 42);
+            btnToggle.SurroundColor = Color.FromArgb(27, 30, 35);
+            btnToggle.TabIndex = 5;
+            btnToggle.Text = "▶  Start";
+            btnToggle.Click += btnToggle_Click;
+            //
+            // lblHint
+            //
+            lblHint.AutoSize = true;
+            lblHint.BackColor = Color.FromArgb(27, 30, 35);
+            lblHint.Font = new Font("Segoe UI", 8.5F);
+            lblHint.ForeColor = Color.FromArgb(142, 150, 163);
+            lblHint.Location = new Point(18, 84);
+            lblHint.Name = "lblHint";
+            lblHint.Size = new Size(470, 15);
+            lblHint.TabIndex = 6;
+            lblHint.Text = "Phones on the same Wi‑Fi find this PC automatically while it runs. You can also enter the address and port manually.";
+            //
+            // pnlSpacer
+            //
+            pnlSpacer.BackColor = Color.FromArgb(18, 20, 23);
+            pnlSpacer.Dock = DockStyle.Top;
+            pnlSpacer.Location = new Point(0, 116);
+            pnlSpacer.Name = "pnlSpacer";
+            pnlSpacer.Size = new Size(748, 12);
+            pnlSpacer.TabIndex = 1;
+            //
+            // pnlClients
+            //
+            pnlClients.Controls.Add(lblClientsHeader);
+            pnlClients.Controls.Add(lblClientCount);
+            pnlClients.Controls.Add(lblNoClients);
+            pnlClients.Controls.Add(lstClients);
+            pnlClients.Dock = DockStyle.Fill;
+            pnlClients.Location = new Point(0, 0);
+            pnlClients.Margin = new Padding(0, 0, 6, 0);
+            pnlClients.Name = "pnlClients";
+            pnlClients.Size = new Size(244, 330);
+            pnlClients.TabIndex = 0;
+            //
+            // lblClientsHeader
+            //
+            lblClientsHeader.AutoSize = true;
+            lblClientsHeader.BackColor = Color.FromArgb(27, 30, 35);
+            lblClientsHeader.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblClientsHeader.ForeColor = Color.FromArgb(92, 214, 230);
+            lblClientsHeader.Location = new Point(16, 14);
+            lblClientsHeader.Name = "lblClientsHeader";
+            lblClientsHeader.Size = new Size(46, 13);
+            lblClientsHeader.TabIndex = 0;
+            lblClientsHeader.Text = "PHONES";
+            //
+            // lblClientCount
+            //
+            lblClientCount.AutoSize = true;
+            lblClientCount.BackColor = Color.FromArgb(27, 30, 35);
+            lblClientCount.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            lblClientCount.ForeColor = Color.FromArgb(142, 150, 163);
+            lblClientCount.Location = new Point(196, 14);
+            lblClientCount.Name = "lblClientCount";
+            lblClientCount.Size = new Size(32, 15);
+            lblClientCount.TabIndex = 1;
+            lblClientCount.Text = "0 / 4";
+            //
+            // lblNoClients
+            //
+            lblNoClients.BackColor = Color.FromArgb(27, 30, 35);
+            lblNoClients.Font = new Font("Segoe UI", 9F);
+            lblNoClients.ForeColor = Color.FromArgb(142, 150, 163);
+            lblNoClients.Location = new Point(10, 42);
+            lblNoClients.Name = "lblNoClients";
+            lblNoClients.Size = new Size(224, 276);
+            lblNoClients.TabIndex = 2;
+            lblNoClients.Text = "No phones connected yet.\r\nPress Start, then connect\r\nfrom the app.";
+            lblNoClients.TextAlign = ContentAlignment.MiddleCenter;
+            //
+            // lstClients
+            //
+            lstClients.AccessibleName = "Connected phones";
+            lstClients.BackColor = Color.FromArgb(27, 30, 35);
+            lstClients.BorderStyle = BorderStyle.None;
+            lstClients.DrawMode = DrawMode.OwnerDrawFixed;
+            lstClients.Font = new Font("Segoe UI", 9.5F);
+            lstClients.ForeColor = Color.FromArgb(232, 235, 239);
+            lstClients.IntegralHeight = false;
+            lstClients.ItemHeight = 44;
+            lstClients.Location = new Point(10, 42);
+            lstClients.Name = "lstClients";
+            lstClients.Size = new Size(224, 276);
+            lstClients.TabIndex = 3;
+            lstClients.DrawItem += LstClients_DrawItem;
+            //
+            // pnlLog
+            //
+            pnlLog.Controls.Add(lblLogHeader);
+            pnlLog.Controls.Add(btnClearLog);
+            pnlLog.Controls.Add(rtbLog);
+            pnlLog.Dock = DockStyle.Fill;
+            pnlLog.Location = new Point(256, 0);
+            pnlLog.Margin = new Padding(6, 0, 0, 0);
+            pnlLog.Name = "pnlLog";
+            pnlLog.Size = new Size(492, 330);
+            pnlLog.TabIndex = 1;
+            //
+            // lblLogHeader
+            //
+            lblLogHeader.AutoSize = true;
+            lblLogHeader.BackColor = Color.FromArgb(27, 30, 35);
+            lblLogHeader.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblLogHeader.ForeColor = Color.FromArgb(92, 214, 230);
+            lblLogHeader.Location = new Point(16, 14);
+            lblLogHeader.Name = "lblLogHeader";
+            lblLogHeader.Size = new Size(61, 13);
+            lblLogHeader.TabIndex = 0;
+            lblLogHeader.Text = "EVENT LOG";
+            //
+            // btnClearLog
+            //
+            btnClearLog.AccessibleName = "Clear event log";
+            btnClearLog.ButtonStyle = PcButtonStyle.Ghost;
+            btnClearLog.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnClearLog.Location = new Point(418, 9);
+            btnClearLog.Name = "btnClearLog";
+            btnClearLog.Size = new Size(60, 26);
+            btnClearLog.SurroundColor = Color.FromArgb(27, 30, 35);
+            btnClearLog.TabIndex = 1;
+            btnClearLog.Text = "Clear";
+            btnClearLog.Click += btnClearLog_Click;
+            //
+            // rtbLog
+            //
+            rtbLog.AccessibleName = "Event log";
+            rtbLog.BackColor = Color.FromArgb(27, 30, 35);
             rtbLog.BorderStyle = BorderStyle.None;
-            rtbLog.ScrollBars  = RichTextBoxScrollBars.Vertical;
-
-            pnlLog.Controls.AddRange(new Control[]
-                { lblLogHeader, btnClearLog, rtbLog });
-
-            // ── Bottom container for the two cards ────────────────────
-            pnlCards = new Panel();
-            pnlCards.Dock      = DockStyle.Fill;
-            pnlCards.BackColor = bg;
-            pnlCards.Controls.AddRange(new Control[] { pnlLog, pnlClients });
-
-            pnlSpacer = new Panel();
-            pnlSpacer.Dock      = DockStyle.Top;
-            pnlSpacer.Height    = 12;
-            pnlSpacer.BackColor = bg;
-
-            pnlBody.Controls.AddRange(new Control[]
-                { pnlCards, pnlSpacer, pnlConnection });
-
-            // ── Footer ─────────────────────────────────────────────────
-            pnlFooter.Dock      = DockStyle.Bottom;
-            pnlFooter.Height    = 28;
-            pnlFooter.BackColor = surface;
-
-            lblFooter.AutoSize  = false;
-            lblFooter.Dock      = DockStyle.Fill;
-            lblFooter.Text      = "© 2026 Axcel Blade  •  github.com/axcel-blade  •  UDP  •  ViGEmBus";
-            lblFooter.Font      = fontSm;
-            lblFooter.ForeColor = textSec;
-            lblFooter.TextAlign = ContentAlignment.MiddleCenter;
-
+            rtbLog.Font = new Font("Cascadia Mono", 9F);
+            rtbLog.ForeColor = Color.FromArgb(232, 235, 239);
+            rtbLog.Location = new Point(16, 44);
+            rtbLog.Name = "rtbLog";
+            rtbLog.ReadOnly = true;
+            rtbLog.ScrollBars = RichTextBoxScrollBars.Vertical;
+            rtbLog.Size = new Size(466, 274);
+            rtbLog.TabIndex = 2;
+            rtbLog.Text = "";
+            //
+            // tblCards
+            //
+            tblCards.BackColor = Color.FromArgb(18, 20, 23);
+            tblCards.ColumnCount = 2;
+            tblCards.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 250F));
+            tblCards.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblCards.Controls.Add(pnlClients, 0, 0);
+            tblCards.Controls.Add(pnlLog, 1, 0);
+            tblCards.Dock = DockStyle.Fill;
+            tblCards.Location = new Point(0, 128);
+            tblCards.Margin = new Padding(0);
+            tblCards.Name = "tblCards";
+            tblCards.RowCount = 1;
+            tblCards.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblCards.Size = new Size(748, 330);
+            tblCards.TabIndex = 2;
+            //
+            // pnlFooter
+            //
+            pnlFooter.BackColor = Color.FromArgb(18, 20, 23);
             pnlFooter.Controls.Add(lblFooter);
-
-            // ── Form ───────────────────────────────────────────────────
+            pnlFooter.Dock = DockStyle.Bottom;
+            pnlFooter.Location = new Point(16, 510);
+            pnlFooter.Name = "pnlFooter";
+            pnlFooter.Size = new Size(748, 30);
+            pnlFooter.TabIndex = 2;
+            //
+            // lblFooter
+            //
+            lblFooter.Dock = DockStyle.Fill;
+            lblFooter.Font = new Font("Segoe UI", 8F);
+            lblFooter.ForeColor = Color.FromArgb(142, 150, 163);
+            lblFooter.Location = new Point(0, 0);
+            lblFooter.Name = "lblFooter";
+            lblFooter.Size = new Size(748, 30);
+            lblFooter.TabIndex = 0;
+            lblFooter.Text = "UDP  ·  ViGEmBus  ·  Virtual Xbox 360 (XInput)  ·  github.com/axcel-blade/PocketController";
+            lblFooter.TextAlign = ContentAlignment.MiddleCenter;
+            //
+            // pnlBody
+            //
+            pnlBody.BackColor = Color.FromArgb(18, 20, 23);
+            pnlBody.Controls.Add(tblCards);
+            pnlBody.Controls.Add(pnlSpacer);
+            pnlBody.Controls.Add(pnlConnection);
+            pnlBody.Dock = DockStyle.Fill;
+            pnlBody.Location = new Point(16, 76);
+            pnlBody.Name = "pnlBody";
+            pnlBody.Size = new Size(748, 434);
+            pnlBody.TabIndex = 1;
+            //
+            // MainForm
+            //
             AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode       = AutoScaleMode.Font;
-            ClientSize          = new Size(700, 500);
-            MinimumSize         = new Size(560, 420);
-            BackColor           = bg;
-            Text                = "PocketController Server";
-            Controls.AddRange(new Control[] { pnlBody, pnlFooter, pnlHeader });
-
-            ((System.ComponentModel.ISupportInitialize)numPort).EndInit();
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(18, 20, 23);
+            ClientSize = new Size(780, 540);
+            Controls.Add(pnlBody);
+            Controls.Add(pnlFooter);
+            Controls.Add(pnlHeader);
+            ForeColor = Color.FromArgb(232, 235, 239);
+            MinimumSize = new Size(680, 480);
+            Name = "MainForm";
+            Padding = new Padding(16, 4, 16, 0);
+            Text = "PocketController Server";
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
             pnlStatus.ResumeLayout(false);
             pnlStatus.PerformLayout();
-            pnlBody.ResumeLayout(false);
             pnlConnection.ResumeLayout(false);
             pnlConnection.PerformLayout();
+            pnlPortBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numPort).EndInit();
             pnlClients.ResumeLayout(false);
             pnlClients.PerformLayout();
             pnlLog.ResumeLayout(false);
             pnlLog.PerformLayout();
+            tblCards.ResumeLayout(false);
             pnlFooter.ResumeLayout(false);
+            pnlBody.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
-        private static void DrawCardBorder(PaintEventArgs e, Color bg, Color border)
-        {
-            using var p = new Pen(border, 1);
-            e.Graphics.DrawRectangle(p, 0, 0, e.ClipRectangle.Width - 1, e.ClipRectangle.Height - 1);
-        }
-
-        private void LstClients_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            if (e.Index < 0) return;
-            var surface = Color.FromArgb(24, 24, 37);
-            var accent  = Color.FromArgb(99, 102, 241);
-            var textPri = Color.FromArgb(226, 232, 240);
-            var hover   = Color.FromArgb(38, 38, 56);
-
-            bool selected = (e.State & DrawItemState.Selected) != 0;
-            e.Graphics.FillRectangle(new SolidBrush(selected ? hover : surface), e.Bounds);
-
-            // green dot
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            e.Graphics.FillEllipse(new SolidBrush(Color.FromArgb(34, 197, 94)),
-                e.Bounds.X + 10, e.Bounds.Y + 10, 8, 8);
-
-            // text
-            var text = lstClients.Items[e.Index]?.ToString() ?? "";
-            TextRenderer.DrawText(e.Graphics, text,
-                new Font("Segoe UI", 9f, FontStyle.Regular),
-                new Point(e.Bounds.X + 26, e.Bounds.Y + 7),
-                textPri);
-        }
-
-        // Panels
-        private Panel  pnlHeader, pnlStatus, pnlBody, pnlConnection;
-        private Panel  pnlClients, pnlLog, pnlFooter, pnlCards, pnlSpacer;
+        #endregion
 
         // Header
-        private Label  lblAppName, lblVersion, lblStatusDot, lblStatusText;
+        private Panel pnlHeader;
+        private PictureBox picLogo;
+        private Label lblAppName;
+        private Label lblVersion;
+        private RoundedPanel pnlStatus;
+        private StatusDot lblStatusDot;
+        private Label lblStatusText;
 
         // Connection
-        private Label          lblIpIcon, lblIp, lblPortLabel;
-        private NumericUpDown  numPort;
-        private Button         btnToggle;
+        private RoundedPanel pnlConnection;
+        private Label lblIpCaption;
+        private Label lblIp;
+        private PcButton btnCopyIp;
+        private Label lblPortCaption;
+        private RoundedPanel pnlPortBox;
+        private NumericUpDown numPort;
+        private PcButton btnToggle;
+        private Label lblHint;
+
+        // Body
+        private Panel pnlBody;
+        private Panel pnlSpacer;
+        private TableLayoutPanel tblCards;
 
         // Clients
-        private Label    lblClientsHeader, lblClientCount;
-        private ListBox  lstClients;
+        private RoundedPanel pnlClients;
+        private Label lblClientsHeader;
+        private Label lblClientCount;
+        private Label lblNoClients;
+        private ListBox lstClients;
 
         // Log
-        private Label        lblLogHeader;
-        private Button       btnClearLog;
-        private RichTextBox  rtbLog;
+        private RoundedPanel pnlLog;
+        private Label lblLogHeader;
+        private PcButton btnClearLog;
+        private RichTextBox rtbLog;
 
         // Footer
+        private Panel pnlFooter;
         private Label lblFooter;
     }
 }
