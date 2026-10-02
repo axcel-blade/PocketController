@@ -30,6 +30,10 @@ public partial class MainForm : Form
         numPort.Value = Math.Clamp(_settings.Port, (int)numPort.Minimum, (int)numPort.Maximum);
         lblIp.Text    = GetLocalIp();
 
+        using (var title = ClientTitleFont())
+        using (var sub = ClientSubFont())
+            lstClients.ItemHeight = Math.Min(255, title.Height + sub.Height + RowGap + RowPadding * 2 + 6);
+
         SetStatus(running: false);
         RefreshClientList();
         LayoutCards();
@@ -192,7 +196,7 @@ public partial class MainForm : Form
         using (var bg = new SolidBrush(Theme.Surface))
             g.FillRectangle(bg, e.Bounds);
 
-        var row = new RectangleF(e.Bounds.X + 2, e.Bounds.Y + 3, e.Bounds.Width - 5, e.Bounds.Height - 6);
+        var row = new RectangleF(e.Bounds.X + 2, e.Bounds.Y + 3, e.Bounds.Width - 5, e.Bounds.Height - 7);
         bool selected = (e.State & DrawItemState.Selected) != 0;
         using (var path = Theme.RoundedRect(row, 10))
         using (var fill = new SolidBrush(Theme.SurfaceRaised))
@@ -203,15 +207,32 @@ public partial class MainForm : Form
         }
 
         using (var dot = new SolidBrush(Theme.Lime))
-            g.FillEllipse(dot, row.X + 12, row.Y + row.Height / 2 - 4, 8, 8);
+            g.FillEllipse(dot, row.X + 13, row.Y + row.Height / 2 - 4, 8, 8);
 
-        using var titleFont = Theme.Ui(9.5f, FontStyle.Bold);
-        using var subFont   = Theme.Mono(8f);
-        TextRenderer.DrawText(g, $"Controller {s.Id}", titleFont,
-            new Point((int)row.X + 28, (int)row.Y + 3), Theme.Text);
-        TextRenderer.DrawText(g, s.EndPoint.ToString(), subFont,
-            new Point((int)row.X + 28, (int)row.Y + 20), Theme.TextDim);
+        // Two lines, centred as a block, positioned from measured font heights
+        // so they never overlap at higher Windows display scaling.
+        using var titleFont = ClientTitleFont();
+        using var subFont   = ClientSubFont();
+        var name     = _server.GetDeviceName(s);
+        var title    = name ?? $"Controller {s.Id}";
+        var subtitle = name != null ? $"Controller {s.Id}  ·  {s.EndPoint.Address}" : s.EndPoint.Address.ToString();
+
+        int textLeft  = (int)row.X + 30;
+        int textWidth = (int)row.Right - textLeft - 10;
+        int blockH    = titleFont.Height + RowGap + subFont.Height;
+        int top       = (int)(row.Y + (row.Height - blockH) / 2);
+        const TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine;
+
+        TextRenderer.DrawText(g, title, titleFont,
+            new Rectangle(textLeft, top, textWidth, titleFont.Height), Theme.Text, flags);
+        TextRenderer.DrawText(g, subtitle, subFont,
+            new Rectangle(textLeft, top + titleFont.Height + RowGap, textWidth, subFont.Height), Theme.TextDim, flags);
     }
+
+    private const int RowGap = 4;
+    private const int RowPadding = 8;
+    private static Font ClientTitleFont() => Theme.Ui(9.5f, FontStyle.Bold);
+    private static Font ClientSubFont()   => Theme.Mono(8.5f);
 
     private void SetStatus(bool running)
     {

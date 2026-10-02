@@ -18,6 +18,7 @@ public sealed class ServerController : IDisposable
     private readonly VirtualGamepadManager _gamepads = new();
     private readonly DiscoveryService _discovery;
     private readonly Dictionary<IPAddress, DateTime> _lastProbeLog = new();
+    private readonly Dictionary<IPAddress, string> _deviceNames = new();
     private int _port;
     private bool _disposed;
 
@@ -169,8 +170,21 @@ public sealed class ServerController : IDisposable
         => _udp.Send(ep, new GamepadMessage { Type = type, TimestampMs = echoTimestampMs });
 
     // Phones probe every couple of seconds while searching; log each phone at most every 30 s.
+    /// <summary>
+    /// The phone's name if it introduced itself through discovery (probes come from the
+    /// same IP as its controller connection); otherwise <c>null</c>.
+    /// </summary>
+    public string? GetDeviceName(ClientSession session)
+    {
+        lock (_deviceNames)
+            return _deviceNames.TryGetValue(session.EndPoint.Address, out var name) ? name : null;
+    }
+
     private void LogProbe(IPEndPoint ep, string device)
     {
+        lock (_deviceNames)
+            _deviceNames[ep.Address] = device;
+
         lock (_lastProbeLog)
         {
             if (_lastProbeLog.TryGetValue(ep.Address, out var last) && DateTime.UtcNow - last < TimeSpan.FromSeconds(30))
