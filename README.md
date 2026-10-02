@@ -10,7 +10,7 @@
 
 <!-- Static badges -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-c4f82a)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.1.0-c4f82a)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-c4f82a)](CHANGELOG.md)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Platforms](https://img.shields.io/badge/app-Android%20%7C%20iOS-5cd6e6)](app/README.md)
@@ -25,19 +25,20 @@ The phone app only works together with PocketController Server on Windows; see [
 ## Architecture
 
 ```
-PocketControllerServer (WinForms host)        app/ (Flutter Android/iOS app)
-├── Protocol          — Packet format         ├── screens/ (controller, connection)
-├── GamepadDriver     — Virtual Xbox via ViGEm├── widgets/ (controls, layout surface/picker)
-└── NetworkLayer      — UDP server            ├── models/ (gamepad state, layouts)
-                                              ├── services/ (persisted settings)
-                                              └── network/ (bridge connection, protocol)
+server/ (Windows, .NET 10 WinForms)            app/ (Flutter, Android + iOS)
+├── Protocol      — packets + discovery format ├── screens/  (controller, connection)
+├── NetworkLayer  — UDP server, sessions,      ├── widgets/  (controls, layout surface/picker)
+│                   discovery                  ├── models/   (gamepad state, layouts)
+├── GamepadDriver — virtual Xbox 360 (ViGEm)   ├── services/ (persisted settings)
+└── MainForm      — themed server window       └── network/  (connection, discovery, auto-connect)
 ```
 
 ## Features
 
 - **Controls:** 8-way D-pad, A/B/X/Y, two analog sticks, LB/RB, analog LT/RT, Back / Home / Start — all multi-touch.
 - **Layouts:** Classic, Racing and Compact, plus custom layouts you can drag, resize, save and delete.
-- **Automatic discovery:** the app finds PocketController servers on your Wi‑Fi and reconnects to your PC on launch. Entering an IP manually still works.
+- **Automatic discovery & reconnect:** the app finds PocketController servers on your Wi‑Fi and reconnects to your PC whenever it's available — at launch, after the server starts, or after a dropped connection. Entering an IP manually still works.
+- **Server window:** shows the PC address to enter, Start/Stop, connected phones by name, and an event log, in the same theme as the app.
 - **Honest connection status:** the app only shows *Connected* after the server acknowledges it, and shows latency and specific errors otherwise.
 - **Comfort & accessibility:** haptic feedback (toggleable), screen-reader labels, 44 px minimum touch targets, sizing for small phones.
 - Settings and layouts are stored on the phone.
@@ -50,6 +51,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a detailed walkthrough.
 - Windows 10/11
 - [ViGEmBus driver](https://github.com/nefarius/ViGEmBus/releases) installed
 - .NET 10 runtime
+- To build: .NET 10 SDK, and Visual Studio 2022 17.13+ or Visual Studio 2026 (the solution is `.slnx`)
 
 ### Client (Android / iOS)
 - Flutter 3.x / Dart 3.x
@@ -58,13 +60,15 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a detailed walkthrough.
 ## Getting Started
 
 1. Install the ViGEmBus driver.
-2. Build and run `PocketControllerServer`.
+2. Open `server/PocketControllerServer.slnx`, set **PocketControllerServer** as the startup project, and run it (F5).
 3. Click **Start** — the server listens on UDP port `5555` by default.
 4. Build and install the Flutter app (`cd app && flutter run`).
 5. Open the **PC connection** screen (status chip, top left). Your PC appears under **On your network**; tap it. Or enter the PC's IP address and port manually and tap **Connect**.
 6. If Windows Firewall asks, allow PocketController Server on private networks (UDP `5555` for play, `5556`–`5557` for discovery).
 
 Next time, the app reconnects to the same PC automatically when it finds it.
+
+Having trouble? See [SUPPORT.md](SUPPORT.md).
 
 > PocketController only works with PocketController Server. It is not compatible with DroidJoy or
 > other controller servers. The wire format is documented in [docs/PROTOCOL.md](docs/PROTOCOL.md).
@@ -90,4 +94,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for branching and PR guidelines.
 
 ## Version
 
-**v1.1.0**
+**v1.2.0** — see the [changelog](CHANGELOG.md).

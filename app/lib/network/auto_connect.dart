@@ -30,68 +30,107 @@ DiscoveredBridge? pickAutoConnectTarget(
   return null;
 }
 
-/// Keeps discovery running while disconnected and, once per app launch, joins a
-/// known server automatically when it appears. Manual entry always remains possible.
+/// Keeps discovery running while disconnected and joins the user's known server
+/// automatically whenever it appears: at launch, when the server is started after the
+/// app, and after the connection drops (server restart, Wi‑Fi blip).
+///
+/// It stays out of the way when the user is in control: pressing Disconnect pauses it
+/// until the user connects again or relaunches the app. Manual entry always works.
 class AutoConnector {
-  static const autoWindow = Duration(seconds: 8);
+  /// How long after launch an unknown-but-only server may be joined (rule 3).
+  static const firstRunWindow = Duration(seconds: 8);
+
+  /// Minimum time between automatic attempts, so a server that keeps failing
+  /// isn't hammered and the user can still read the error.
+  static const retryDelay = Duration(seconds: 5);
 
   final AppSettings settings;
   final BridgeConnection bridge;
   final BridgeDiscovery discovery;
 
-  bool _armed = false;
+  bool _pausedByUser = false;
   bool _windowOver = false;
+  DateTime _lastAttempt = DateTime.fromMillisecondsSinceEpoch(0);
   Timer? _windowTimer;
+  Timer? _retryTimer;
 
   AutoConnector({required this.settings, required this.bridge, required this.discovery});
 
   void start() {
-    _armed = settings.autoConnect;
-    _windowTimer = Timer(autoWindow, () {
+    _windowTimer = Timer(firstRunWindow, () {
       _windowOver = true;
       _tryAutoConnect();
-      _armed = false; // only auto-join at launch; after that the user decides
     });
     bridge.addListener(_onBridgeChanged);
     discovery.addListener(_tryAutoConnect);
+    settings.addListener(_tryAutoConnect);
     _onBridgeChanged();
   }
 
+  bool get _enabled => settings.autoConnect && !_pausedByUser;
+
   void _onBridgeChanged() {
     if (bridge.status == BridgeStatus.connected) {
-      _armed = false;
       discovery.stop();
     } else if (bridge.status != BridgeStatus.connecting && !discovery.isScanning) {
       discovery.start();
     }
+    _tryAutoConnect();
   }
 
   void _tryAutoConnect() {
-    if (!_armed || bridge.status != BridgeStatus.disconnected) return;
+    if (!_enabled) return;
+    if (bridge.status == BridgeStatus.connected || bridge.status == BridgeStatus.connecting) return;
+
+    final wait = retryDelay - DateTime.now().difference(_lastAttempt);
+    if (wait > Duration.zero) {
+      // Try again once the delay has passed, even if discovery stays quiet meanwhile.
+      _retryTimer ??= Timer(wait, () {
+        _retryTimer = null;
+        _tryAutoConnect();
+      });
+      return;
+    }
+
     final target = pickAutoConnectTarget(
       discovery.bridges,
       savedHost: settings.host,
       savedPort: settings.port,
       savedName: settings.bridgeName,
-      scanWindowOver: _windowOver,
+      // Joining a server we've never used is only done once, right after launch.
+      scanWindowOver: _windowOver && _lastAttempt.millisecondsSinceEpoch == 0,
     );
     if (target == null) return;
-    _armed = false;
-    connectTo(target);
+    _lastAttempt = DateTime.now();
+    connectTo(target, auto: true);
   }
 
   /// Connects to a discovered server and remembers it for next time.
-  Future<void> connectTo(DiscoveredBridge b) async {
+  Future<void> connectTo(DiscoveredBridge b, {bool auto = false}) async {
+    if (!auto) _pausedByUser = false;
     await settings.setBridge(b.address, b.port, name: b.name);
     await bridge.connect(b.address, b.port);
   }
 
+  /// The user connected by typing an address: resume auto-reconnect for that server.
+  void noteManualConnect() => _pausedByUser = false;
+
+  /// The user pressed Disconnect/Cancel: don't reconnect behind their back.
+  void disconnect() {
+    _pausedByUser = true;
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    bridge.disconnect();
+  }
+
   @visibleForTesting
-  bool get isArmed => _armed;
+  bool get isPaused => _pausedByUser;
 
   void dispose() {
     _windowTimer?.cancel();
+    _retryTimer?.cancel();
     bridge.removeListener(_onBridgeChanged);
     discovery.removeListener(_tryAutoConnect);
+    settings.removeListener(_tryAutoConnect);
   }
 }

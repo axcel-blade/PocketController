@@ -103,13 +103,17 @@ Discovery lets the app find servers without typing an IP. It uses short UTF-8 te
 
 ### Auto-connect
 
-When the app opens with **Connect automatically** on (the default), it joins:
+With **Connect automatically** on (the default), whenever the app is not connected it joins:
 
 1. the last-used server (same address and port), or
 2. the last-used server by name, if its IP changed, or
-3. if no server was ever saved, the only server found within 8 s, if exactly one has a free slot.
+3. right after launch only, if no server was ever saved: the only server found within 8 s,
+   if exactly one has a free slot.
 
-It never picks between several unknown servers, and it only auto-connects once per launch.
+This covers opening the app before starting the server, and reconnecting after the server
+restarts or Wi‑Fi drops. Attempts are at least 5 s apart. Pressing **Disconnect** (or **Cancel**)
+pauses auto-connect until the user connects again or relaunches the app. It never picks between
+several unknown servers.
 
 ## Connection state in the app
 

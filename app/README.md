@@ -15,8 +15,12 @@ XInput controller via the ViGEmBus driver.
   layouts; select or delete them from the layout picker. Stored on the device.
 - Connection screen with address/port entry, connect/disconnect, live status, latency and specific
   error messages. "Connected" is only shown after the server acknowledges the handshake.
+- LAN discovery: servers on the same Wi‑Fi are listed under **On your network**; tap one to connect.
+- Auto-connect (on by default): rejoins your last PC whenever it is found — at launch, when the
+  server starts later, or after the connection drops. Pressing Disconnect pauses it.
 - Haptic feedback (toggleable), screen-reader labels, minimum 44 px touch targets, multi-touch.
-- Settings (address, port, haptics, selected layout, custom layouts) persist via `shared_preferences`.
+- Settings (address, port, server name, auto-connect, haptics, selected layout, custom layouts)
+  persist via `shared_preferences`.
 
 ## Run
 
@@ -33,4 +37,5 @@ flutter test
 ```
 
 Tests include a fake UDP bridge on loopback that verifies the handshake, press/release delivery,
-timeouts and the server-full response.
+timeouts and the server-full response, plus discovery against a fake server (including one heard
+from several addresses) and the auto-connect selection rules.

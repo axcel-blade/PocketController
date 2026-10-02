@@ -58,6 +58,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
     final host = _hostCtrl.text.trim();
     final port = int.parse(_portCtrl.text.trim());
     await widget.settings.setBridge(host, port);
+    widget.autoConnector.noteManualConnect();
     await widget.bridge.connect(host, port);
   }
 
@@ -138,7 +139,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
                     Expanded(
                       child: switch (b.status) {
                         BridgeStatus.connected => OutlinedButton.icon(
-                            onPressed: b.disconnect,
+                            onPressed: widget.autoConnector.disconnect,
                             icon: const Icon(Icons.link_off_rounded),
                             label: const Text('Disconnect'),
                             style: OutlinedButton.styleFrom(
@@ -148,7 +149,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
                             ),
                           ),
                         BridgeStatus.connecting => OutlinedButton.icon(
-                            onPressed: b.disconnect,
+                            onPressed: widget.autoConnector.disconnect,
                             icon: const SizedBox.square(
                                 dimension: 16, child: CircularProgressIndicator(strokeWidth: 2)),
                             label: const Text('Cancel'),
@@ -168,7 +169,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
                     value: widget.settings.autoConnect,
                     onChanged: widget.settings.setAutoConnect,
                     title: const Text('Connect automatically'),
-                    subtitle: const Text('Join your last PC when the app opens and it’s found on the network',
+                    subtitle: const Text('Join your last PC whenever it’s found on the network, and reconnect if the connection drops',
                         style: TextStyle(color: PcColors.textDim)),
                     contentPadding: EdgeInsets.zero,
                   ),

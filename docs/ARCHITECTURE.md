@@ -26,7 +26,7 @@ The wire format is specified in [PROTOCOL.md](PROTOCOL.md).
 | `services/app_settings.dart` | Persists bridge address/port, haptics, the selected layout and custom layouts with `shared_preferences`. |
 | `network/protocol.dart` | Serializes packets and parses server replies. |
 | `network/discovery.dart` | LAN discovery: sends probes, listens for announcements, keeps the list of servers found. |
-| `network/auto_connect.dart` | Runs discovery while disconnected and joins a known server automatically at launch (`pickAutoConnectTarget`). |
+| `network/auto_connect.dart` | Runs discovery while disconnected and joins the known server whenever it appears, with a 5 s retry delay; Disconnect pauses it (`pickAutoConnectTarget`). |
 | `network/bridge_connection.dart` | UDP socket, handshake, 60 Hz send loop, pings, latency, timeouts and error messages. Exposes `BridgeStatus`. |
 | `screens/controller_screen.dart` | Main screen: toolbar, control surface and layout editor. Releases all inputs when the app loses focus. |
 | `screens/connection_screen.dart` | Address/port entry, connect/disconnect, status, errors, haptics toggle, compatibility notes. |
@@ -82,7 +82,9 @@ saved layout is missing a control, it is filled in from Classic.
 | `GamepadDriver/VirtualGamepadManager.cs` | One ViGEm Xbox 360 controller per session. |
 | `GamepadDriver/GamepadMapper.cs` | Maps packet fields to Xbox buttons, axes and triggers. |
 | `ServerController.cs` | Connects the network layer to the gamepad driver; handles messages and sends replies. |
-| `MainForm.cs`, `TrayManager.cs`, `SettingsManager.cs` | WinForms UI, tray icon and saved settings (such as the port). |
+| `MainForm.cs` / `MainForm.Designer.cs` | Server window. Controls are declared in designer format; `LayoutCards()` positions them on a DPI-scaled grid. |
+| `Theme.cs`, `ThemedControls.cs` | App colour palette and custom-drawn controls (`RoundedPanel`, `PcButton`, `StatusDot`). |
+| `TrayManager.cs`, `SettingsManager.cs` | Tray icon (X hides to tray, except under the debugger) and saved settings such as the port. |
 | `Tests/` | xUnit tests for the protocol and network layer. |
 
 ### Discovery
@@ -93,9 +95,14 @@ server ── broadcast every 2 s ─────▶ UDP 5557 (phones listening)
 ```
 
 The server starts discovery after the controller port is open, and logs each phone that is
-searching (at most once every 30 s per phone). On the phone, `AutoConnector` keeps discovery
-running whenever it isn't connected, stops it once connected, and auto-joins a known server
-once per launch. Manual IP entry always stays available. See [PROTOCOL.md](PROTOCOL.md#lan-discovery).
+searching (at most once every 30 s per phone); the name a phone sends is shown in the Phones
+list. Announcements carry a per-run server ID and all of the PC's addresses, so a PC with several
+adapters is listed once and the phone connects through the address on its own subnet.
+
+On the phone, `AutoConnector` keeps discovery running whenever it isn't connected, stops it once
+connected, and joins the known server whenever it appears (at most every 5 s). Pressing
+Disconnect pauses it. Manual IP entry always stays available. See
+[PROTOCOL.md](PROTOCOL.md#lan-discovery).
 
 ### Message handling (`ServerController.HandleMessage`)
 
