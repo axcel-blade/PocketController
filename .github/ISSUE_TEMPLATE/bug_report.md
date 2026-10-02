@@ -28,6 +28,8 @@ labels: bug
 - .NET version: <!-- dotnet --version -->
 - ViGEmBus version:
 - PocketController version:
+- Phone model and Android / iOS version:
+- Connection screen status / error (if any):
 
 ## Event Log Output
 

@@ -11,7 +11,8 @@ public sealed class TrayManager : IDisposable
     private readonly Form _mainForm;
 
     /// <param name="mainForm">The form to show/hide via the tray menu.</param>
-    public TrayManager(Form mainForm)
+    /// <param name="icon">Icon shown in the notification area.</param>
+    public TrayManager(Form mainForm, Icon icon)
     {
         _mainForm = mainForm;
 
@@ -22,7 +23,7 @@ public sealed class TrayManager : IDisposable
         _trayIcon = new NotifyIcon
         {
             Text             = "PocketController Server",
-            Icon             = SystemIcons.Application,
+            Icon             = icon,
             ContextMenuStrip = menu,
             Visible          = true
         };

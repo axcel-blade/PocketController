@@ -18,6 +18,11 @@ public class HeartbeatMonitor : IDisposable
     /// <summary>Starts the periodic check. Safe to call multiple times — subsequent calls are no-ops.</summary>
     public void Start()
     {
+        if (_timer != null)
+        {
+            _timer.Change(Constants.HeartbeatIntervalMs, Constants.HeartbeatIntervalMs);
+            return;
+        }
         _timer = new System.Threading.Timer(
             _ => CheckClients(),
             null,
@@ -39,5 +44,9 @@ public class HeartbeatMonitor : IDisposable
     }
 
     /// <inheritdoc/>
-    public void Dispose() => _timer?.Dispose();
+    public void Dispose()
+    {
+        _timer?.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

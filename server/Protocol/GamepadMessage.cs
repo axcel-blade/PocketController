@@ -11,7 +11,7 @@ public struct GamepadMessage
 
     /// <summary>
     /// Button states packed into a bitmask.
-    /// Bit positions: A=0, B=1, X=2, Y=3, LB=4, RB=5, Start=6, Back=7, LStick=8, RStick=9.
+    /// Bit positions: A=0, B=1, X=2, Y=3, LB=4, RB=5, Start=6, Back=7, LStick=8, RStick=9, Guide=10.
     /// </summary>
     public ushort Buttons;
 

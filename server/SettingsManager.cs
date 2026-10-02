@@ -18,6 +18,8 @@ public class AppSettings
 /// </summary>
 public static class SettingsManager
 {
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+
     private static readonly string SettingsPath =
         Path.Combine(AppContext.BaseDirectory, "settings.json");
 
@@ -42,7 +44,7 @@ public static class SettingsManager
     /// <summary>Writes <paramref name="settings"/> to <c>settings.json</c> as indented JSON.</summary>
     public static void Save(AppSettings settings)
     {
-        var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+        var json = JsonSerializer.Serialize(settings, JsonOptions);
         File.WriteAllText(SettingsPath, json);
     }
 }
