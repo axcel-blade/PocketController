@@ -119,6 +119,23 @@ public sealed class DiscoveryService : IDisposable
         }
     }
 
+    /// <summary>This PC's IPv4 addresses on active, non-loopback adapters.</summary>
+    public static IReadOnlyList<string> LocalAddresses()
+    {
+        var result = new List<string>();
+        foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
+        {
+            if (ni.OperationalStatus != OperationalStatus.Up ||
+                ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
+            foreach (var ua in ni.GetIPProperties().UnicastAddresses)
+            {
+                if (ua.Address.AddressFamily == AddressFamily.InterNetwork)
+                    result.Add(ua.Address.ToString());
+            }
+        }
+        return result;
+    }
+
     /// <summary>The limited broadcast address plus each active IPv4 interface's subnet broadcast.</summary>
     internal static IEnumerable<IPAddress> BroadcastAddresses()
     {

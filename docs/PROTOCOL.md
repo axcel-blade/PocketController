@@ -83,10 +83,15 @@ Discovery lets the app find servers without typing an IP. It uses short UTF-8 te
 | Packet | Format |
 |--------|--------|
 | Probe | `PCTRL?1\|<device name>` |
-| Announcement | `PCTRL!1\|{"name":"GAMING-PC","port":5555,"clients":1,"max":4}` |
+| Announcement | `PCTRL!1\|{"name":"GAMING-PC","port":5555,"clients":1,"max":4,"id":"3f9c0a1b2c4d","ips":["192.168.0.5","172.20.0.1"]}` |
 
 * `name` is the PC's machine name, `port` is the controller port to connect to, and
   `clients`/`max` show how many controller slots are in use.
+* `id` is a random ID chosen each time the server starts, and `ips` lists all of the PC's IPv4
+  addresses. A PC with several adapters (Wi‑Fi, WSL, VMware, VirtualBox…) is heard from several
+  source addresses, so the app groups announcements by `id` and connects through the address on
+  the phone's own subnet. Both fields are optional; without them the app falls back to
+  address + port.
 * The app sends probes every 2 s to `255.255.255.255`, to its subnet broadcast address, and
   (every other round) to each host in its /24 subnet. The unicast sweep matters where broadcasts
   are blocked, such as on iOS without the multicast entitlement or on some routers.

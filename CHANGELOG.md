@@ -5,6 +5,7 @@
 ### Added
 - LAN discovery: the server answers probes (UDP 5556) and broadcasts announcements (UDP 5557); the app lists servers found on the network, connects with one tap, and auto-connects to the last-used PC at launch (can be turned off). Manual IP entry is unchanged
 - Server logs phones that are searching for a server
+- Discovery lists a PC with several network adapters once (announcements carry a server ID and its addresses; the app connects via the address on its own subnet)
 - Server window redesign matching the app theme (graphite, lime, cyan): rounded cards, lime Start / red Stop buttons, status pill, large PC address with Copy button, client cards, dark title bar, app and tray icon
 - Mobile app redesign (Android + iOS): graphite/lime/cyan theme, Classic/Racing/Compact layouts, custom layout editor with save/select/delete, persisted settings, haptics toggle, accessibility labels, small-screen sizing
 - Connection screen with verified status, round-trip latency and actionable error messages

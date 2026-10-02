@@ -19,6 +19,8 @@ public sealed class ServerController : IDisposable
     private readonly DiscoveryService _discovery;
     private readonly Dictionary<IPAddress, DateTime> _lastProbeLog = new();
     private readonly Dictionary<IPAddress, string> _deviceNames = new();
+    private readonly string _serverId = Guid.NewGuid().ToString("N")[..12];
+    private IReadOnlyList<string> _localAddresses = [];
     private int _port;
     private bool _disposed;
 
@@ -45,7 +47,8 @@ public sealed class ServerController : IDisposable
         _heartbeat = new HeartbeatMonitor(_clients);
 
         _discovery = new DiscoveryService(() => new DiscoveryInfo(
-            Environment.MachineName, _port, _clients.Sessions.Count, Constants.MaxClients));
+            Environment.MachineName, _port, _clients.Sessions.Count, Constants.MaxClients,
+            _serverId, _localAddresses));
         _discovery.OnProbe += LogProbe;
         _discovery.OnError += ex => Log($"Discovery error: {ex.Message}");
 
@@ -100,6 +103,7 @@ public sealed class ServerController : IDisposable
         Log($"Server started on port {port}");
 
         // Discovery is a convenience: if its port is taken, phones can still connect by IP.
+        _localAddresses = DiscoveryService.LocalAddresses();
         try
         {
             _discovery.Start();

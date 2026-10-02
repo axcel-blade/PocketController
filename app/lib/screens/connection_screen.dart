@@ -262,8 +262,8 @@ class _DiscoveredList extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8),
           child: _BridgeTile(
             bridge: b,
-            connected: b.key == connectedKey,
-            onTap: enabled && b.key != connectedKey && !b.isFull ? () => onSelect(b) : null,
+            connected: b.endpoint == connectedKey,
+            onTap: enabled && b.endpoint != connectedKey && !b.isFull ? () => onSelect(b) : null,
           ),
         ),
     ]);

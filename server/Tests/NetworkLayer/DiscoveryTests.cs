@@ -17,6 +17,16 @@ public class DiscoveryTests
     }
 
     [Fact]
+    public void Announcement_RoundTrips_IdAndAddresses()
+    {
+        var info  = new DiscoveryInfo("GAMING-PC", 5555, 1, 4, "abc123", ["192.168.0.5", "172.20.0.1"]);
+        var text  = Encoding.UTF8.GetString(DiscoveryMessage.BuildAnnouncement(info));
+        Assert.Contains("\"id\":\"abc123\"", text);
+        Assert.Contains("\"ips\":[\"192.168.0.5\",\"172.20.0.1\"]", text);
+        Assert.Equal(info, DiscoveryMessage.ParseAnnouncement(Encoding.UTF8.GetBytes(text)));
+    }
+
+    [Fact]
     public void Announcement_RoundTrips_Info()
     {
         var info  = new DiscoveryInfo("GAMING-PC", 5555, 1, 4);

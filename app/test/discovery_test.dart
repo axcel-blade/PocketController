@@ -35,7 +35,64 @@ void main() {
     });
   });
 
+  group('Multiple network adapters', () {
+    test('announcement carries the server id and all of its addresses', () {
+      final b = DiscoveryProtocol.parseAnnouncement(
+        utf8.encode('PCTRL!1|{"name":"PC","port":5555,"clients":0,"max":4,"id":"abc",'
+            '"ips":["192.168.0.5","172.20.0.1","192.168.56.1"]}'),
+        '192.168.56.1',
+      )!;
+      expect(b.key, 'abc');
+      expect(b.addresses, ['192.168.56.1', '192.168.0.5', '172.20.0.1']);
+    });
+
+    test('picks the address on the phone\'s own subnet', () {
+      expect(
+        chooseAddress(
+          source: '192.168.56.1', // heard via a VirtualBox/VMware adapter
+          reported: ['192.168.0.5', '172.20.0.1'],
+          localPrefixes: {'192.168.0'},
+        ),
+        '192.168.0.5',
+      );
+    });
+
+    test('falls back to the previous choice, then the packet source', () {
+      expect(chooseAddress(source: '10.1.1.1', reported: [], localPrefixes: {}, previous: '10.2.2.2'), '10.2.2.2');
+      expect(chooseAddress(source: '10.1.1.1', reported: [], localPrefixes: {}), '10.1.1.1');
+    });
+  });
+
   group('BridgeDiscovery', () {
+    test('lists a server once even when heard from several addresses', () async {
+      // One server (same id) answering from two source addresses, like a PC whose
+      // reply also goes out through a WSL/VMware adapter.
+      final a = await RawDatagramSocket.bind(InternetAddress.loopbackIPv4, 0);
+      final b = await RawDatagramSocket.bind(InternetAddress('127.0.0.2'), 0);
+      const reply = 'PCTRL!1|{"name":"PC","port":5555,"clients":0,"max":4,"id":"same-server"}';
+      a.listen((e) {
+        if (e != RawSocketEvent.read) return;
+        for (var dg = a.receive(); dg != null; dg = a.receive()) {
+          a.send(utf8.encode(reply), dg.address, dg.port);
+          b.send(utf8.encode(reply), dg.address, dg.port);
+        }
+      });
+      final discovery = BridgeDiscovery(
+        deviceName: 'Test',
+        targetsOverride: () async => [InternetAddress.loopbackIPv4],
+        discoveryPort: a.port,
+        announcePort: null,
+      );
+      await discovery.start();
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+
+      expect(discovery.bridges.length, 1);
+      expect(discovery.bridges.single.addresses.toSet(), {'127.0.0.1', '127.0.0.2'});
+      discovery.stop();
+      a.close();
+      b.close();
+    });
+
     test('finds a server that answers probes', () async {
       final server = await RawDatagramSocket.bind(InternetAddress.loopbackIPv4, 0);
       final probes = <String>[];

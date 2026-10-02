@@ -5,24 +5,71 @@ import 'package:flutter/foundation.dart';
 
 /// A PocketController server found on the local network.
 class DiscoveredBridge {
+  /// Per-run server ID ('' for servers that don't send one).
+  final String id;
   final String name;
+
+  /// The address the app will connect to (see [chooseAddress]).
   final String address;
+
+  /// Every address the server reported (its adapters, plus where its packets came from).
+  final List<String> addresses;
   final int port;
   final int clients;
   final int max;
   final DateTime lastSeen;
 
   const DiscoveredBridge({
+    this.id = '',
     required this.name,
     required this.address,
+    this.addresses = const [],
     required this.port,
     required this.clients,
     required this.max,
     required this.lastSeen,
   });
 
-  String get key => '$address:$port';
+  /// Identity of the server: its ID, so a PC heard via several adapters is listed once.
+  String get key => id.isNotEmpty ? id : endpoint;
+
+  /// Where the app connects.
+  String get endpoint => '$address:$port';
+
   bool get isFull => clients >= max;
+
+  DiscoveredBridge copyWith({String? address, List<String>? addresses}) => DiscoveredBridge(
+        id: id,
+        name: name,
+        address: address ?? this.address,
+        addresses: addresses ?? this.addresses,
+        port: port,
+        clients: clients,
+        max: max,
+        lastSeen: lastSeen,
+      );
+}
+
+/// Picks the server address the phone can actually reach: one on the same /24 subnet as
+/// one of the phone's own addresses. A PC with WSL/VMware/VirtualBox adapters also reports
+/// addresses the phone can't route to. Falls back to [previous], then to [source]
+/// (where the packet came from, which is reachable by definition).
+String chooseAddress({
+  required String source,
+  required Iterable<String> reported,
+  required Set<String> localPrefixes,
+  String? previous,
+}) {
+  String prefix(String ip) {
+    final i = ip.lastIndexOf('.');
+    return i < 0 ? ip : ip.substring(0, i);
+  }
+
+  final candidates = [source, ...reported.where((a) => a != source)];
+  for (final a in candidates) {
+    if (localPrefixes.contains(prefix(a))) return a;
+  }
+  return previous ?? source;
 }
 
 /// Wire format for discovery packets. Must match server Protocol/DiscoveryMessage.cs.
@@ -51,9 +98,17 @@ class DiscoveryProtocol {
       final name = j['name'], port = j['port'], clients = j['clients'], max = j['max'];
       if (name is! String || port is! int || clients is! int || max is! int) return null;
       if (port < 1 || port > 65535) return null;
+      final id = j['id'], ips = j['ips'];
       return DiscoveredBridge(
+        id: id is String ? id : '',
         name: name.isEmpty ? address : name,
         address: address,
+        addresses: [
+          address,
+          if (ips is List)
+            for (final ip in ips)
+              if (ip is String && ip != address && InternetAddress.tryParse(ip) != null) ip,
+        ],
         port: port,
         clients: clients,
         max: max,
@@ -84,6 +139,9 @@ class BridgeDiscovery extends ChangeNotifier {
   final int? announcePort;
 
   final Map<String, DiscoveredBridge> _found = {};
+
+  /// First three octets of this phone's IPv4 addresses, e.g. "192.168.0".
+  final Set<String> _localPrefixes = {};
   RawDatagramSocket? _probeSocket;
   RawDatagramSocket? _announceSocket;
   Timer? _probeTimer;
@@ -177,7 +235,8 @@ class BridgeDiscovery extends ChangeNotifier {
     // Full subnet sweep on every other round keeps traffic low while still finding
     // servers on networks that drop broadcasts.
     final sweep = _round++ % 2 == 0;
-    final targets = targetsOverride != null ? await targetsOverride!() : await _defaultTargets(sweep: sweep);
+    final targets =
+        targetsOverride != null ? await targetsOverride!() : await _defaultTargets(sweep: sweep, prefixes: _localPrefixes);
     for (final t in targets) {
       try {
         socket.send(packet, t, discoveryPort);
@@ -191,13 +250,24 @@ class BridgeDiscovery extends ChangeNotifier {
   void _onEvent(RawDatagramSocket socket, RawSocketEvent e) {
     if (e != RawSocketEvent.read) return;
     for (var dg = socket.receive(); dg != null; dg = socket.receive()) {
-      final b = DiscoveryProtocol.parseAnnouncement(dg.data, dg.address.address);
-      if (b == null) continue;
-      final previous = _found[b.key];
+      final parsed = DiscoveryProtocol.parseAnnouncement(dg.data, dg.address.address);
+      if (parsed == null) continue;
+      final previous = _found[parsed.key];
+      final all = {...?previous?.addresses, ...parsed.addresses}.toList();
+      final b = parsed.copyWith(
+        addresses: all,
+        address: chooseAddress(
+          source: dg.address.address,
+          reported: all,
+          localPrefixes: _localPrefixes,
+          previous: previous?.address,
+        ),
+      );
       _found[b.key] = b;
       if (previous == null ||
           previous.clients != b.clients ||
           previous.name != b.name ||
+          previous.address != b.address ||
           DateTime.now().difference(previous.lastSeen) > staleAfter) {
         notifyListeners();
       }
@@ -211,7 +281,7 @@ class BridgeDiscovery extends ChangeNotifier {
     if (_found.length != before) notifyListeners();
   }
 
-  static Future<List<InternetAddress>> _defaultTargets({required bool sweep}) async {
+  static Future<List<InternetAddress>> _defaultTargets({required bool sweep, required Set<String> prefixes}) async {
     final targets = <InternetAddress>[InternetAddress('255.255.255.255')];
     try {
       final interfaces = await NetworkInterface.list(type: InternetAddressType.IPv4, includeLoopback: false);
@@ -220,6 +290,7 @@ class BridgeDiscovery extends ChangeNotifier {
           final p = a.rawAddress;
           if (p.length != 4 || p[0] == 169) continue; // skip link-local
           final prefix = '${p[0]}.${p[1]}.${p[2]}';
+          prefixes.add(prefix);
           targets.add(InternetAddress('$prefix.255'));
           if (sweep) {
             for (var host = 1; host < 255; host++) {

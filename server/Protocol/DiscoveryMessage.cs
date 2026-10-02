@@ -5,11 +5,31 @@ using System.Text.Json.Serialization;
 namespace PocketController.Protocol;
 
 /// <summary>What a server tells phones about itself during LAN discovery.</summary>
+/// <param name="Name">PC name shown in the app.</param>
+/// <param name="Port">Controller (game) port to connect to.</param>
+/// <param name="Clients">Controller slots in use.</param>
+/// <param name="Max">Total controller slots.</param>
+/// <param name="Id">
+/// Random per-run server ID. A PC with several network adapters (Wi‑Fi, WSL, VMware…) is heard
+/// from several source addresses; the app uses this ID to show it once.
+/// </param>
+/// <param name="Addresses">All of the server's IPv4 addresses, so the app can pick one on its own subnet.</param>
 public sealed record DiscoveryInfo(
     [property: JsonPropertyName("name")]    string Name,
     [property: JsonPropertyName("port")]    int Port,
     [property: JsonPropertyName("clients")] int Clients,
-    [property: JsonPropertyName("max")]     int Max);
+    [property: JsonPropertyName("max")]     int Max,
+    [property: JsonPropertyName("id")]      string Id = "",
+    [property: JsonPropertyName("ips")]     IReadOnlyList<string>? Addresses = null)
+{
+    // Records compare lists by reference; compare contents so equal announcements are equal.
+    public bool Equals(DiscoveryInfo? other) =>
+        other is not null &&
+        Name == other.Name && Port == other.Port && Clients == other.Clients && Max == other.Max &&
+        Id == other.Id && (Addresses ?? []).SequenceEqual(other.Addresses ?? []);
+
+    public override int GetHashCode() => HashCode.Combine(Name, Port, Clients, Max, Id);
+}
 
 /// <summary>
 /// Text packets used for LAN discovery. They are kept separate from the 48-byte
