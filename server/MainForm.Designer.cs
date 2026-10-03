@@ -109,7 +109,7 @@ namespace PocketControllerServer
             lblVersion.Name = "lblVersion";
             lblVersion.Size = new Size(90, 12);
             lblVersion.TabIndex = 2;
-            lblVersion.Text = "SERVER  ·  v1.2.1";
+            lblVersion.Text = "SERVER  ·  v1.2.2";
             //
             // pnlStatus
             //

@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-10-03
+
+### Fixed
+- App icon no longer has transparent corners: the iOS app icon set is a full lime square (corners were rendering black), and Android 8+ uses an adaptive icon (lime background + controller foreground) instead of a circle on a white plate
+- Launch screen uses the app background colour (`#121417`) on Android and iOS instead of white
+- Android 12+ launch screen shows the logo without the white circle behind it, using a dedicated transparent launch icon
+
 ## [1.2.1] - 2026-10-03
 
 ### Changed
