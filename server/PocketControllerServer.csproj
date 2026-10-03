@@ -21,15 +21,20 @@
     <None Remove="Tests\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Assets/app.ico" LogicalName="PocketController.app.ico" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>Assets/app.ico</ApplicationIcon>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>1.2.0</Version>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.1</Version>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <FileVersion>1.2.1.0</FileVersion>
     <Company>Axcel Blade</Company>
     <Authors>Axcel Blade</Authors>
     <Copyright>Copyright © 2026 Axcel Blade</Copyright>

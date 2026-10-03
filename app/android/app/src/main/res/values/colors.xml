@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches AppColors.background in lib/theme.dart -->
+    <color name="launch_background">#121417</color>
+    <color name="ic_launcher_background">#C4F82A</color>
+</resources>
