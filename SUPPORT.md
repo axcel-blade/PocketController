@@ -26,7 +26,7 @@ Please include:
 - .NET runtime version (`dotnet --version`)
 - ViGEmBus driver version
 - Phone model and Android / iOS version
-- PocketController app version and the error shown on the connection screen (if any)
+- PocketController server version and app version and the error shown on the connection screen (if any)
 - Steps to reproduce
 - Expected vs actual behaviour
 - Any relevant log output from the event log panel
