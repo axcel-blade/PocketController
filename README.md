@@ -14,7 +14,7 @@
 
 <!-- Static badges -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-c4f82a)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.2.1-c4f82a)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.2-c4f82a)](CHANGELOG.md)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Platforms](https://img.shields.io/badge/app-Android%20%7C%20iOS-5cd6e6)](app/README.md)
@@ -98,4 +98,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for branching and PR guidelines.
 
 ## Version
 
-**v1.2.1** — see the [changelog](CHANGELOG.md).
+**v1.2.2** — see the [changelog](CHANGELOG.md).
