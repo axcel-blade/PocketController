@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-10-03
+
+### Changed
+- New controller logo for the Android app, iOS app and Windows server: launcher icons, iOS app icon set, server `.exe`, window and tray icon (`server/Assets/app.ico`)
+- Source logos (1024×1024) live in `docs/assets/logos/`
+
 ## [1.2.0] - 2026-10-03
 
 ### Added

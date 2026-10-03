@@ -55,31 +55,11 @@ internal static class Theme
         return path;
     }
 
-    /// <summary>App icon drawn at runtime: a lime rounded square with a graphite D-pad.</summary>
+    /// <summary>App icon loaded from the embedded Assets/app.ico.</summary>
     public static Icon CreateAppIcon()
     {
-        using var bmp = new Bitmap(64, 64);
-        using (var g = Graphics.FromImage(bmp))
-        {
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.Clear(Color.Transparent);
-            using (var bg = RoundedRect(new RectangleF(2, 2, 60, 60), 16))
-            using (var lime = new SolidBrush(Lime))
-                g.FillPath(lime, bg);
-            using var dark = new SolidBrush(OnLime);
-            g.FillRectangle(dark, 26, 14, 12, 36);
-            g.FillRectangle(dark, 14, 26, 36, 12);
-        }
-        var handle = bmp.GetHicon();
-        using var temp = Icon.FromHandle(handle);
-        var icon = (Icon)temp.Clone();
-        NativeMethods.DestroyIcon(handle);
-        return icon;
-    }
-
-    private static class NativeMethods
-    {
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool DestroyIcon(IntPtr handle);
+        using var stream = typeof(Theme).Assembly.GetManifestResourceStream("PocketController.app.ico")
+            ?? throw new InvalidOperationException("Embedded app icon not found.");
+        return new Icon(stream, 256, 256);
     }
 }
