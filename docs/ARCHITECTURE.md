@@ -83,7 +83,7 @@ saved layout is missing a control, it is filled in from Classic.
 | `GamepadDriver/GamepadMapper.cs` | Maps packet fields to Xbox buttons, axes and triggers. |
 | `ServerController.cs` | Connects the network layer to the gamepad driver; handles messages and sends replies. |
 | `MainForm.cs` / `MainForm.Designer.cs` | Server window. Controls are declared in designer format; `LayoutCards()` positions them on a DPI-scaled grid. |
-| `Theme.cs`, `ThemedControls.cs` | App colour palette and custom-drawn controls (`RoundedPanel`, `PcButton`, `StatusDot`). |
+| `Theme.cs`, `ThemedControls.cs` | App colour palette and custom-drawn controls (`RoundedPanel`, `PcButton`, `StatusDot`); loads the app icon embedded from `Assets/app.ico`. |
 | `TrayManager.cs`, `SettingsManager.cs` | Tray icon (X hides to tray, except under the debugger) and saved settings such as the port. |
 | `Tests/` | xUnit tests for the protocol and network layer. |
 
