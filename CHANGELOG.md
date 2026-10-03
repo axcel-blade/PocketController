@@ -1,5 +1,8 @@
 # Changelog
 
+The Windows server and the mobile app are versioned independently. From here on, release
+sections are labelled `[Server X.Y.Z]` or `[App X.Y.Z]`; releases up to 1.2.2 shipped both together.
+
 ## [Unreleased]
 
 ## [1.2.2] - 2026-10-03

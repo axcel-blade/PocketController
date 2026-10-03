@@ -54,12 +54,19 @@ sides, and the protocol document in the same PR.
 
 - Keep PRs focused — one feature or fix per PR.
 - Update `CHANGELOG.md` under `[Unreleased]` with a summary of your change.
-- When bumping a release, update the version in all of these:
-  - `CHANGELOG.md` — move `[Unreleased]` into a dated release section
-  - `README.md` — the version badge and the **Version** section
+- The server and the mobile app are versioned **independently** — only bump the one you changed.
+  They stay compatible as long as both follow the same wire format in `docs/PROTOCOL.md`, not by sharing a version number.
+- When releasing the **server**, update:
+  - `CHANGELOG.md` — move its `[Unreleased]` entries into a dated `## [Server X.Y.Z] - YYYY-MM-DD` section
+  - `README.md` — the server version badge and the **Versions** section
   - `server/PocketControllerServer.csproj` — `Version`, `AssemblyVersion`, `FileVersion`
   - `server/MainForm.Designer.cs` — the `lblVersion` text in the window header
-  - `app/pubspec.yaml` — `version: X.Y.Z+N` (increase the build number `N` too)
+  - Tag the release `server-vX.Y.Z`
+- When releasing the **mobile app**, update:
+  - `CHANGELOG.md` — move its `[Unreleased]` entries into a dated `## [App X.Y.Z] - YYYY-MM-DD` section
+  - `README.md` — the app version badge and the **Versions** section
+  - `app/pubspec.yaml` — `version: X.Y.Z+N` (always increase the build number `N`, even for a patch)
+  - Tag the release `app-vX.Y.Z`
 - Do not include build outputs (`bin/`, `obj/`) or IDE files (`.vs/`) in your commit.
 
 ## Code Style

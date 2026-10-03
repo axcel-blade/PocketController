@@ -27,7 +27,8 @@ labels: bug
 - OS: <!-- e.g. Windows 11 22H2 -->
 - .NET version: <!-- dotnet --version -->
 - ViGEmBus version:
-- PocketController version:
+- PocketController server version:
+- PocketController app version:
 - Phone model and Android / iOS version:
 - Connection screen status / error (if any):
 
