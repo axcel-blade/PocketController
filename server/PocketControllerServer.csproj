@@ -32,9 +32,9 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Assets/app.ico</ApplicationIcon>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>1.2.1</Version>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
+    <Version>1.2.2</Version>
+    <AssemblyVersion>1.2.2.0</AssemblyVersion>
+    <FileVersion>1.2.2.0</FileVersion>
     <Company>Axcel Blade</Company>
     <Authors>Axcel Blade</Authors>
     <Copyright>Copyright © 2026 Axcel Blade</Copyright>
